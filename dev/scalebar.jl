@@ -26,7 +26,7 @@ function scalebar!(img::AbstractArray, scale::Real, unit::String, position::Tupl
 end 
 
 function a()
-
+img_sizex = size(img,1)
 
 end
 
