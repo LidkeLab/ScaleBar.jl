@@ -6,8 +6,8 @@ using HDF5
     # Write your tests here.
 
     example_image = zeros(200, 100)
-    bar_size = [10, 20]
-    output_test_image = scalebar(bar_size, "horizontal", "tl")
+    bar_size = 10
+    output_test_image = scalebar(example_image::Array, bar_size::Int, orientation::String = "horizontal", position::"tl")
     @testset "Test scalebar" begin
         @test output_test_image == example image
     end
