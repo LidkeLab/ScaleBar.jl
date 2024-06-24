@@ -1,5 +1,6 @@
 module ScaleBar
 
-# Write your package code here.
+include("interface.jl")
+
 
 end
