@@ -4,6 +4,7 @@ using HDF5
 
 function get_bar_coordinates
     # Write your function here.
+    if output_test_image[i, j] = 1
 end
 
 @testset "ScaleBar.jl" begin
@@ -14,7 +15,7 @@ end
     output_test_image = scalebar(image::Array = example_image, bar_size::Int, orientation::String = "horizontal", position::String = "tl")
     bar_coordinatres = get_bar_coordinates(image::Array = example_image, bar_size::Int, orientation::String = "horizontal", position::String = "tl")
 
-    if output_test_image[i, j] = 1
+   
 
     @test 
 
