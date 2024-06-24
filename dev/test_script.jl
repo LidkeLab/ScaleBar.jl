@@ -7,4 +7,3 @@ if isnothing(a)
     println("no value set for a")
 end
 
-end
