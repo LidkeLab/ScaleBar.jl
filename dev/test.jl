@@ -35,7 +35,7 @@ else
     y_pos = "t"
 end
 
-position = join([y_pos, x_pos], "")
+position = join([y_pos, x_pos])
 
 # orientation
 
