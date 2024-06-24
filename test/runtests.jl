@@ -1,31 +1,34 @@
 using ScaleBar
 using Test
 
-@enter function get_bar_coordinates(image::Array)
-    # Write your function here.
-    pos_x
-    pos_y
-    for i in 1:size(output_test_image, 1)
-        for j in 1:size(output_test_image, 2)
-            if output_test_image[i, j] == 1
+function get_bar_coordinates(image::Matrix{Int})
+    pos_x = Int[]
+    pos_y = Int[]
+    for i in 1:size(image, 1)
+        for j in 1:size(image, 2)
+            if image[i, j] == 1
                 push!(pos_x, i)
                 push!(pos_y, j)
             end
         end
     end
-    pos = zeros(length(pos_x), length(pos_y))
-    pos = [pos_x, pos_y]
+    pos = [pos_x pos_y]  # Create a 2-column matrix directly
     return pos
 end
 
 @testset "ScaleBar.jl" begin
     # Write your tests here.
 
-    example_image::Array = zeros(200, 100)
-    bar_size = 10
-    # output_test_image = scalebar(image::Array = example_image, bar_size::Int, orientation::String = "horizontal", position::String = "tl")
-    output_test_image = example_image
-    output_test_image[3:10, 6:36] .= 1
-    bar_coordinatres = get_bar_coordinates(image::Array = output_test_image)
+    # Test scenario
+    example_image = zeros(Int, 200, 100)  # Ensure the matrix is of integer type
+    example_image[3:12, 6:15] .= 1  # Create a bar of 1s
+    bar_coordinates = get_bar_coordinates(example_image)
+
+    println(bar_coordinates)  # This should print the coordinates of the bar
+
+    size = maximum([maximum(bar_coordinates[:, 1]) - minimum(bar_coordinates[:, 1]), maximum(bar_coordinates[:, 2]) - minimum(bar_coordinates[:, 2])])
+    @test size == bar_size
+
+    # Position
 
 end
