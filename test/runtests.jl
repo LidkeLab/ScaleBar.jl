@@ -7,7 +7,7 @@ using HDF5
 
     example image = zeros(200, 100)
     bar_size = [10, 20]
-    output_test_image = scalebar(bar_size, "horizontal", "tl", "mm")
+    output_test_image = scalebar(bar_size, "horizontal", "tl")
     @testset "Test scalebar" begin
         @test output_test_image == example image
     end
