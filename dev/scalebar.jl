@@ -19,3 +19,13 @@ function scalebar!(img::AbstractArray, scale::Real, unit::String, position::Tupl
     # Draw the text
     text!(img, "$scale $unit", (x + scalebar_width + 5, y + scalebar_height), color=color, fontsize=10  
 end
+
+function a()
+
+
+end
+
+function b()
+
+    
+end
