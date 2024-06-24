@@ -13,3 +13,20 @@ myf(rand(3,3))
 
 myf(rand(3,3); a = 4.5)
 
+# example skeleton 
+
+function scalebar()
+
+    a()
+    b()
+    c()
+end
+
+function a()
+end
+
+function b()
+end
+
+function c()
+end
