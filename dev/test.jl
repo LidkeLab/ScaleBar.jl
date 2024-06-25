@@ -14,13 +14,27 @@ function get_bar_coordinates(image::Matrix{Int})
 end
 
 # Test scenario
-example_image = zeros(Int, 200, 100)  # Ensure the matrix is of integer type
-example_image[3:12, 6:17] .= 1  # Create a bar of 1s
+example_image1 = zeros(Int, 200, 100)  # Ensure the matrix is of integer type
+example_image1[3:12, 6:17] .= 1  # Create a bar of 1s. Size=10x12
+example_image2 = zeros(Int, 100, 200)  # Ensure the matrix is of integer type
+example_image2[6:17, 3:15] .= 1 # Create a bar of 1s. Size=12x13
+example_image3 = zeros(Int, 100, 200)  # Ensure the matrix is of integer type
+example_image3[120:145, 3:15] .= 1 # Create a bar of 1s. Size=26x13
 bar_coordinates = get_bar_coordinates(example_image)
 
 println(bar_coordinates)  # This should print the coordinates of the bar
 
-size = maximum([maximum(bar_coordinates[:, 1]) - minimum(bar_coordinates[:, 1]), maximum(bar_coordinates[:, 2]) - minimum(bar_coordinates[:, 2])])
+bar_size1 = maximum([maximum(bar_coordinates[:, 1]) - minimum(bar_coordinates[:, 1]) + 1, maximum(bar_coordinates[:, 2]) - minimum(bar_coordinates[:, 2]) + 1])
+
+@test bar_size1 == 12
+
+bar_size2 = maximum([maximum(bar_coordinates[:, 1]) - minimum(bar_coordinates[:, 1]) + 1, maximum(bar_coordinates[:, 2]) - minimum(bar_coordinates[:, 2]) + 1])
+
+@test bar_size2 == 13
+
+bar_size3 = maximum([maximum(bar_coordinates[:, 1]) - minimum(bar_coordinates[:, 1]) + 1, maximum(bar_coordinates[:, 2]) - minimum(bar_coordinates[:, 2]) + 1])
+
+@test bar_size3 == 26
 
 # position
 if minimum(bar_coordinates[:, 1]) < (200 - maximum(bar_coordinates[:, 1]))
