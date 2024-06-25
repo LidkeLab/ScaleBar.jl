@@ -78,9 +78,9 @@ end
 
 #test scale bar 
 img = RGB.(ones(512,512))
-x_i, x_f, y_i, y_f=scalebar!(img,position="br",len=50,)
+x_i, x_f, y_i, y_f=scalebar!(img,position="bl",len=50,)
 scalebar_draw(img,x_i, x_f, y_i, y_f)
-
+img
 
 
 
