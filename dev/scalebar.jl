@@ -25,14 +25,13 @@ function scalebar!(img::AbstractArray, scale::Real, unit::String, position::Tupl
 
 end 
 
-function barposition(img::AbstractArray; position::String = "br", pxsize::Float64 = 0.5, len::Real = 10 )
+function barposition(img::AbstractArray; position::String = "br", pxsize::Float64 = 0.5, len::Real = 10, scale::Int=15 )
 img_sizex = size(img,1)
 img_sizey = size(img,2)
-scale_factor = 15
 len_bar = round(Int,len/pxsize)
-width_bar = round(Int,len_bar/(scale_factor/2))
-offset_x = round(Int,img_sizex/scale_factor)
-offset_y = round(Int,img_sizey/scale_factor)
+width_bar = round(Int,len_bar/(scale/2))
+offset_x = round(Int,img_sizex/scale)
+offset_y = round(Int,img_sizey/scale)
 
 if position[1] == "b"
     y_i = img_sizey-width_bar-offset_y
