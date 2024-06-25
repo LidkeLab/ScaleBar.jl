@@ -24,15 +24,15 @@ size = maximum([maximum(bar_coordinates[:, 1]) - minimum(bar_coordinates[:, 1]),
 
 # position
 if minimum(bar_coordinates[:, 1]) < (200 - maximum(bar_coordinates[:, 1]))
-    x_pos = "l"
+    x_pos = "L"
 else
-    x_pos = "r"
+    x_pos = "R"
 end
 
 if minimum(bar_coordinates[:, 2]) < (100 - maximum(bar_coordinates[:, 2]))
-    y_pos = "b"
+    y_pos = "B"
 else
-    y_pos = "t"
+    y_pos = "T"
 end
 
 position = join([y_pos, x_pos])
@@ -40,7 +40,7 @@ position = join([y_pos, x_pos])
 # orientation
 
 if size[1] > size[2]
-    orientation = "h"
+    orientation = "Horizontal"
 else
-    orientation = "v"
+    orientation = "Vertical"
 end
