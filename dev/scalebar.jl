@@ -25,30 +25,37 @@ function scalebar!(img::AbstractArray, scale::Real, unit::String, position::Tupl
 
 end 
 
-function barposition(img::AbstractArray; position::String = "br", pxsize::Float64 = 0.5, len::Real = 10, scale::Int=15 )
-img_sizex = size(img,1)
-img_sizey = size(img,2)
-len_bar = round(Int,len/pxsize)
-width_bar = round(Int,len_bar/(scale/2))
-offset_x = round(Int,img_sizex/scale)
-offset_y = round(Int,img_sizey/scale)
 
-if position[1] == "b"
-    y_i = img_sizey-width_bar-offset_y
-    y_f = img_sizey-offset_y
-elseif position[1] == "u"
-    y_i = offset_y
-    y_f = offset_y+width_bar
-end
-if position[2] == "r"
-    x_i = img_sizex-len_bar-offset_x
-    x_f = img_sizex-offset_x
-elseif position[2] =="l"
-    x_i = offset_x
-    x_f = offset_x+len_bar 
-end
+function scalebar!(img::AbstractArray; position::String = "br", pxsize::Float64 = 0.5, len::Real = 20, scale::Int=15 )
+    img_sizex = size(img,1)
+    img_sizey = size(img,2)
+    len_bar = round(Int,len/pxsize)
+    width_bar = round(Int,len_bar/(scale/2))
+    offset_x = round(Int,img_sizex/scale)
+    offset_y = round(Int,img_sizey/scale)
+    
+    if position[1] == 'b'
+        y_i = img_sizey-width_bar-offset_y
+        y_f = img_sizey-offset_y
+        println("b")
+    elseif position[1] == 'u'
+        y_i = offset_y
+        y_f = offset_y+width_bar
+        println("u")
+    end
+    if position[2] == 'r'
+        x_i = img_sizex-len_bar-offset_x
+        x_f = img_sizex-offset_x
+        println("r")
+    elseif position[2] == 'l'
+        x_i = offset_x
+        x_f = offset_x+len_bar 
+        println("l")
+    end
+    
+    return x_i, x_f, y_i, y_f
+end    
 
-return x_i, x_f, y_i, y_f
 function b()
 
 
