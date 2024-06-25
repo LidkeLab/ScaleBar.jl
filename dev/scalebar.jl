@@ -25,7 +25,7 @@ function scalebar!(img::AbstractArray, scale::Real, unit::String, position::Tupl
 
 end 
 
-function a(img::AbstractArray; position::String = "br", pxsize::Float64 = 0.5, len::Real = 10 )
+function barposition(img::AbstractArray; position::String = "br", pxsize::Float64 = 0.5, len::Real = 10 )
 img_sizex = size(img,1)
 img_sizey = size(img,2)
 scale_factor = 15
