@@ -1,7 +1,8 @@
 using Revise
 using Colors
 using Images
-
+using CairoMakie
+#=
 function scalebar!(img::AbstractArray, scale::Real, unit::String, position::Tuple{Real,Real}, color::RGB{N0f8}=RGB{N0f8}(1,1,1))
     # Get the size of the image
     height, width = size(img)
@@ -23,41 +24,64 @@ function scalebar!(img::AbstractArray, scale::Real, unit::String, position::Tupl
     # Draw the text
     #text!(img, "$scale $unit", (x + scalebar_width + 5, y + scalebar_height), color=color, fontsize=10) 
 
-end 
+end =#
 
 
-function scalebar!(img::AbstractArray; position::String = "br", pxsize::Float64 = 0.5, len::Real = 20, scale::Int=15 )
+function scalebar!(img::AbstractArray; position::String = "br", pxsize::Float64 = 0.5, len::Real = 20, scale::Int=15,units::String = "nm" )
     img_sizex = size(img,1)
     img_sizey = size(img,2)
     len_bar = round(Int,len/pxsize)
     width_bar = round(Int,len_bar/(scale/2))
     offset_x = round(Int,img_sizex/scale)
     offset_y = round(Int,img_sizey/scale)
-    
     if position[1] == 'b'
-        y_i = img_sizey-width_bar-offset_y
-        y_f = img_sizey-offset_y
+        x_i = img_sizey-width_bar-offset_y
+        x_f = img_sizey-offset_y
         println("b")
     elseif position[1] == 'u'
-        y_i = offset_y
-        y_f = offset_y+width_bar
+        x_i = offset_y
+        x_f = offset_y+width_bar
         println("u")
     end
     if position[2] == 'r'
-        x_i = img_sizex-len_bar-offset_x
-        x_f = img_sizex-offset_x
+        y_i = img_sizex-len_bar-offset_x
+        y_f = img_sizex-offset_x
         println("r")
     elseif position[2] == 'l'
-        x_i = offset_x
-        x_f = offset_x+len_bar 
+        y_i = offset_x
+        y_f = offset_x+len_bar 
         println("l")
     end
-    
     return x_i, x_f, y_i, y_f
-end    
+end   
 
-function scalebar(img::AbstractArray; position::String = "br", pxsize::Float64 = 0.5, len::Real = 20, scale::Int=15 )
+##demostration scale bar
+
+
+function scalebar(img::AbstractArray; 
+    position::String = "br", 
+    pxsize::Float64 = 0.5, 
+    len::Real = 20, 
+    scale::Int=15,
+    units::String = "nm" )
  img_new = deepcopy(img)
- scalebar!(img_new, position,pxsize,len,scale)
+ scalebar!(img_new,position,pxsize,len,scale)
  return img_new 
 end
+#draw the scale bar 
+function scalebar_draw(img::AbstractArray,x_i::Int64, x_f::Int64, y_i::Int64, y_f::Int64)
+    midle_bar=round(Int,((x_f-x_i)/2)+x_i)
+    img[x_i:x_f,y_i-1].= RGB(0,0,0)
+    img[x_i:x_f,y_f+1].= RGB(0,0,0)
+    img[midle_bar,y_i:y_f].= RGB(0,0,0)
+end
+
+#test scale bar 
+img = RGB.(ones(512,512))
+x_i, x_f, y_i, y_f=scalebar!(img,position="br",len=50,)
+scalebar_draw(img,x_i, x_f, y_i, y_f)
+
+
+
+
+
