@@ -47,3 +47,10 @@ scalebar!(img, length, pxsize, bar_pxsize, bar_thickness, position, orientation)
 save("/Users/Mahsa/Desktop/The_famous_Lena_with_scalebar.png", img)
 
 display(img)
+
+mydir = ("Src")
+
+fn = "The_famous_Lena_with_scalebar.png"
+filepath = joinpath(mydir, fn)
+
+save(filepath, img)
