@@ -30,10 +30,10 @@ end
     bar_coordinates2 = get_bar_coordinates(example_image2)
     bar_coordinates3 = get_bar_coordinates(example_image3)
 
-# Corrected println statements for debugging
-println(bar_coordinates1)  # Print the coordinates of the bar in example_image1
-println(bar_coordinates2)  # Print the coordinates of the bar in example_image2
-println(bar_coordinates3)  # Print the coordinates of the bar in example_image3
+    # Corrected println statements for debugging
+    println(bar_coordinates1)  # Print the coordinates of the bar in example_image1
+    println(bar_coordinates2)  # Print the coordinates of the bar in example_image2
+    println(bar_coordinates3)  # Print the coordinates of the bar in example_image3
     bar_size1 = maximum([maximum(bar_coordinates1[:, 1]) - minimum(bar_coordinates1[:, 1]) + 1, maximum(bar_coordinates1[:, 2]) - minimum(bar_coordinates1[:, 2]) + 1])
 
     @test bar_size1 == 12
