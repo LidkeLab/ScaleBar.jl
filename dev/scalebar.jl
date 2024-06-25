@@ -56,7 +56,8 @@ function scalebar!(img::AbstractArray; position::String = "br", pxsize::Float64 
     return x_i, x_f, y_i, y_f
 end    
 
-function b()
-
-
+function scalebar(img::AbstractArray; position::String = "br", pxsize::Float64 = 0.5, len::Real = 20, scale::Int=15 )
+ img_new = deepcopy(img)
+ scalebar!(img_new, position,pxsize,len,scale)
+ return img_new 
 end
