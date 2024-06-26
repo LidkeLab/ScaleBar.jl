@@ -34,8 +34,8 @@ function scalebar!(img::AbstractArray;
     scale::Int=15,
     units::String = "nm" )
     
-    img_sizex = size(img,1)
-    img_sizey = size(img,2)
+    img_sizex = size(img,2)
+    img_sizey = size(img,1)
     len_bar = round(Int,len/pxsize)
     width_bar = round(Int,len_bar/(scale/2))
     offset_x = round(Int,img_sizex/scale)
