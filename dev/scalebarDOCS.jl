@@ -17,5 +17,10 @@ DRAFT DOCUMENTATION
 - `position::Tuple{Real,Real}`: The position of the scale bar in the image. The first element is the x-coordinate and the second element is the y-coordinate.
 - `color::RGB{N0f8}`: The color of the scale bar. The default is white.
 
+Option for rectangle or line segments, choose color
+verbosity
+total size of image - 
+    take that size and decide what the default size 
+
 Returns: `img` with the scale bar added.
 """
