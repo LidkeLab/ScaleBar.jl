@@ -97,10 +97,9 @@ function scalebar_draw(img::AbstractArray,
     y_i::Int64, 
     y_f::Int64; 
     color::RGB = RGB(0,0,0))
-    midle_bar = round(Int, ((x_f - x_i) / 2) + x_i)
-    img[x_i:x_f, y_i-1] .= color
-    img[x_i:x_f, y_f+1] .= color
-    img[midle_bar, y_i:y_f] .= color
+   
+    img[x_i:x_f, y_i:y_f] .= color # draw the line (rectangular) scale bar
+
 end
 
 # Modified ver to add width parameter
