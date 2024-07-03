@@ -1,19 +1,6 @@
 using Test
 
-function get_bar_coordinates(image::Matrix{Int})
-    pos_x = Int[]
-    pos_y = Int[]
-    for i in 1:size(image, 1)
-        for j in 1:size(image, 2)
-            if image[i, j] == 1
-                push!(pos_x, i)
-                push!(pos_y, j)
-            end
-        end
-    end
-    pos = [pos_x pos_y]  # Create a 2-column matrix directly
-    return pos
-end
+include("test_helpers.jl")
 
 @testset "scalebar_test" begin
     # Write your tests here.
@@ -31,40 +18,40 @@ end
 
    @testset "Size_test" begin
 
-        bar_size1 = maximum([maximum(bar_coordinates1[:, 1]) - minimum(bar_coordinates1[:, 1]) + 1, maximum(bar_coordinates1[:, 2]) - minimum(bar_coordinates1[:, 2]) + 1])
+        bar_size1 = get_bar_size(bar_coordinates1)
         @test bar_size1 == 12
 
-        bar_size2 = maximum([maximum(bar_coordinates2[:, 1]) - minimum(bar_coordinates2[:, 1]) + 1, maximum(bar_coordinates2[:, 2]) - minimum(bar_coordinates2[:, 2]) + 1])
+        bar_size2 = get_bar_size(bar_coordinates2)
         @test bar_size2 == 13
 
-        bar_size3 = maximum([maximum(bar_coordinates3[:, 1]) - minimum(bar_coordinates3[:, 1]) + 1, maximum(bar_coordinates3[:, 2]) - minimum(bar_coordinates3[:, 2]) + 1])
+        bar_size3 = get_bar_size(bar_coordinates3)
         @test bar_size3 == 26
 
     end
 
     @testset "Orientation_test" begin
 
-        bar_orientation1 = "horizontal"
-        @test bar_orientation1 == "horizontal"
+        bar_orientation1 = get_bar_orientation(bar_coordinates1)
+        @test bar_orientation1 == :horizontal
 
-        bar_orientation2 = "horizontal"
-        @test bar_orientation2 == "horizontal"
+        bar_orientation2 = get_bar_orientation(bar_coordinates2)
+        @test bar_orientation2 == :horizontal
 
-        bar_orientation3 = "horizontal"
-        @test bar_orientation3 == "horizontal"
+        bar_orientation3 = get_bar_orientation(bar_coordinates3)
+        @test bar_orientation3 == :vertical
 
     end
 
     @testset "Position_test" begin
         
-        bar_position1 = [3, 6]
-        @test bar_position1 == [3, 6]
+        bar_position1 = get_bar_position(bar_coordinates1, example_image1)
+        @test bar_position1 == :bl
 
-        bar_position2 = [6, 3]
-        @test bar_position2 == [6, 3]
+        bar_position2 = get_bar_position(bar_coordinates2, example_image2)
+        @test bar_position2 == :bl
 
-        bar_position3 = [20, 3]
-        @test bar_position3 == [20, 5]
+        bar_position3 = get_bar_position(bar_coordinates3, example_image3)
+        @test bar_position3 == :bl
 
     end
 
