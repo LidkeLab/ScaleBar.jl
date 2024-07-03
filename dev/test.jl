@@ -38,15 +38,15 @@ bar_size3 = maximum([maximum(bar_coordinates[:, 1]) - minimum(bar_coordinates[:,
 
 # position
 if minimum(bar_coordinates[:, 1]) < (200 - maximum(bar_coordinates[:, 1]))
-    x_pos = "L"
+    x_pos = "l"
 else
-    x_pos = "R"
+    x_pos = "r"
 end
 
 if minimum(bar_coordinates[:, 2]) < (100 - maximum(bar_coordinates[:, 2]))
-    y_pos = "B"
+    y_pos = "b"
 else
-    y_pos = "T"
+    y_pos = "t"
 end
 
 position = join([y_pos, x_pos])
