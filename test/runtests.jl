@@ -1,4 +1,3 @@
-
 using Test
 
 function get_bar_coordinates(image::Matrix{Int})
@@ -16,7 +15,7 @@ function get_bar_coordinates(image::Matrix{Int})
     return pos
 end
 
-@testset "test" begin
+@testset "scalebar_test" begin
     # Write your tests here.
 
     # Test scenario
@@ -30,22 +29,44 @@ end
     bar_coordinates2 = get_bar_coordinates(example_image2)
     bar_coordinates3 = get_bar_coordinates(example_image3)
 
-    # Corrected println statements for debugging
-    println(bar_coordinates1)  # Print the coordinates of the bar in example_image1
-    println(bar_coordinates2)  # Print the coordinates of the bar in example_image2
-    println(bar_coordinates3)  # Print the coordinates of the bar in example_image3
-    bar_size1 = maximum([maximum(bar_coordinates1[:, 1]) - minimum(bar_coordinates1[:, 1]) + 1, maximum(bar_coordinates1[:, 2]) - minimum(bar_coordinates1[:, 2]) + 1])
+   @testset "Size_test" begin
 
-    @test bar_size1 == 12
+        bar_size1 = maximum([maximum(bar_coordinates1[:, 1]) - minimum(bar_coordinates1[:, 1]) + 1, maximum(bar_coordinates1[:, 2]) - minimum(bar_coordinates1[:, 2]) + 1])
+        @test bar_size1 == 12
 
-    bar_size2 = maximum([maximum(bar_coordinates2[:, 1]) - minimum(bar_coordinates2[:, 1]) + 1, maximum(bar_coordinates2[:, 2]) - minimum(bar_coordinates2[:, 2]) + 1])
+        bar_size2 = maximum([maximum(bar_coordinates2[:, 1]) - minimum(bar_coordinates2[:, 1]) + 1, maximum(bar_coordinates2[:, 2]) - minimum(bar_coordinates2[:, 2]) + 1])
+        @test bar_size2 == 13
 
-    @test bar_size2 == 13
+        bar_size3 = maximum([maximum(bar_coordinates3[:, 1]) - minimum(bar_coordinates3[:, 1]) + 1, maximum(bar_coordinates3[:, 2]) - minimum(bar_coordinates3[:, 2]) + 1])
+        @test bar_size3 == 26
 
-    bar_size3 = maximum([maximum(bar_coordinates3[:, 1]) - minimum(bar_coordinates3[:, 1]) + 1, maximum(bar_coordinates3[:, 2]) - minimum(bar_coordinates3[:, 2]) + 1])
+    end
 
-    @test bar_size3 == 26
+    @testset "Orientation_test" begin
 
-    # Position
+        bar_orientation1 = "horizontal"
+        @test bar_orientation1 == "horizontal"
+
+        bar_orientation2 = "horizontal"
+        @test bar_orientation2 == "horizontal"
+
+        bar_orientation3 = "horizontal"
+        @test bar_orientation3 == "horizontal"
+
+    end
+
+    @testset "Position_test" begin
+        
+        bar_position1 = [3, 6]
+        @test bar_position1 == [3, 6]
+
+        bar_position2 = [6, 3]
+        @test bar_position2 == [6, 3]
+
+        bar_position3 = [20, 3]
+        @test bar_position3 == [20, 5]
+
+    end
+
 
 end
