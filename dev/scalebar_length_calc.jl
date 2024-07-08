@@ -1,11 +1,11 @@
 """ 
-in development
     len_calc(img::AbstractArray)
 
 Determine default scalebar length, in pixels, based on the dimensions of the input image. 
 
 # Arguments
     img::AbstractArray : input array containing image data
+
 # Returns
     len : scalebar length dimension in pixels
     width : scalebar width dimension in pixels
