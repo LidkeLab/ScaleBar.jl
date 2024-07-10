@@ -102,6 +102,9 @@ function scalebar_draw(img::AbstractArray,
 
 end
 
+
+
+
 # Modified ver to add width parameter
 function scalebar!(img::AbstractArray; 
     position::String = "br", 
@@ -158,7 +161,7 @@ end
 
 #test scale bar 
 img = RGB.(ones(512,512))
-x_i, x_f, y_i, y_f = scalebar!(img, position="br", len=50, width=10)
+x_i, x_f, y_i, y_f = scalebar!(img, position="br", len=50, width=5)
 scalebar_draw(img, x_i, x_f, y_i, y_f)
 img
 
