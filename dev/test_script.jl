@@ -1,5 +1,5 @@
-using Revise 
-
+using Revise
+using ScaleBar
 
 function myf(im;  a::Union{Float64,Nothing}=nothing)
 
