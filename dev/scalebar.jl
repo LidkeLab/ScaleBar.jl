@@ -1,9 +1,11 @@
+# I revised the main scalebar module, and added the documentation.
+# I changed some of the function names for clarity, and incorporated the scalebar length calculator. 
+
 using Revise
 using Colors
 using Images
 using CairoMakie
 
-# does scalebar!() need to have the bang?
 
 
 """
@@ -14,7 +16,6 @@ using CairoMakie
         sbwidth::Real,   
         scale::Int,
         units::String,
-        
         )
 
 Generate the starting and ending positions of the scale bar on the input image.
