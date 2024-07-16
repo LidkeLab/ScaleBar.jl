@@ -6,5 +6,7 @@ using Images
 
 include("interface.jl")
 
+export scalebar!, scalebar
+
 
 end
