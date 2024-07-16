@@ -1,4 +1,4 @@
-
+using ScaleBar
 using Documenter
 
 DocMeta.setdocmeta!(ScaleBar, :DocTestSetup, :(using ScaleBar); recursive=true)
