@@ -150,7 +150,7 @@ function len_calc(img::Union{AbstractArray, Array{Float64}})
 
 end
 
-# test scale bar 
-img = RGB.(ones(512,512))
-scalebar!(img,0.5,color=:black)
-img
+# # test scale bar 
+# img = RGB.(ones(512,512))
+# scalebar!(img,0.5,color=:black)
+# img
