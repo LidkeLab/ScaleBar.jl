@@ -8,7 +8,7 @@ Documentation for [ScaleBar](https://github.com/LidkeLab/ScaleBar.jl).
 
 
 ```@docs
+scalebar_coords()
+scalebar_draw!()
 scalebar()
-scalebar!()
-scalebar_draw()
 ```

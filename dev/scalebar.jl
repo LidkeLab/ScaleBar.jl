@@ -153,6 +153,3 @@ function scalebar(img::Union{AbstractArray, Matrix{UInt16}, Matrix{RGB{Float64}}
     return img_new 
 end
 
-#test scale bar 
-img1 = RGB.(ones(512,512))
-img2 = scalebar(img1)

@@ -16,7 +16,7 @@ Determine default scalebar length, in pixels, based on the dimensions of the inp
 using Distributions
 using Revise
 
-function len_calc(img::Union{AbstractArray, Array{RGB{Float64}}})
+function len_calc(img::Union{AbstractArray, Array{Float64}})
    
     # get the dimensions of the input image
     len_dim = size(img)[2]
