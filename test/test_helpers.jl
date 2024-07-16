@@ -83,9 +83,9 @@ function get_bar_position(bar_coordinates::Matrix{Int}, image::Array)
     end
 
     if minimum(bar_coordinates[:, 2]) < (image_size[2] - maximum(bar_coordinates[:, 2]))
-        y_pos = "b"
-    else
         y_pos = "t"
+    else
+        y_pos = "b"
     end
 
     str_position = join([y_pos, x_pos])
