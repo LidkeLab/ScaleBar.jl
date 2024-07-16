@@ -1,19 +1,26 @@
 using Test
-include("../src/ScaleBar.jl")
+using Images
+include("../src/ScaleBar_old.jl")
+include("../src/interface_old.jl")
 include("test_helpers.jl")
 
 @testset "scalebar_test" begin
     # Write your tests here.
 
     # Test scenario
-    img = RGB.(ones(512,512))
-    scalebar!(img,0.5,color=:black)
+    img = RGB.(zeros(512,512))
+    img2 = scalebar(img, 1.0, color=:white)
+    img_gray = Gray.(img2)./maximum(Gray.(img2))
+    img_binary = copy(img_gray)
+    img_binary[img_gray .> 0.5] .= 1.0
+    img_binary[img_gray .<= 0.5] .= 0.0
+    img_binary = convert(Array{Int}, img_binary)
     # example_image1[3:12, 6:17] .= 1  # Create a bar of 1s. Size=10x12
     # example_image2 = zeros(Int, 100, 200)  # Ensure the matrix is of integer type
     # example_image2[6:17, 3:15] .= 1 # Create a bar of 1s. Size=12x13
     # example_image3 = zeros(Int, 100, 200)  # Ensure the matrix is of integer type
     # example_image3[20:45, 3:15] .= 1 # Create a bar of 1s. Size=26x13
-    bar_coordinates1 = get_bar_coordinates(example_image1)
+    bar_coordinates1 = get_bar_coordinates(img_binary)
     # bar_coordinates2 = get_bar_coordinates(example_image2)
     # bar_coordinates3 = get_bar_coordinates(example_image3)
 
@@ -58,3 +65,18 @@ include("test_helpers.jl")
 
 
 end
+
+
+img = RGB.(zeros(512,512))
+img2 = scalebar(img, 1.0, color=:white)
+img_gray = Gray.(img2)./maximum(Gray.(img2))
+img_binary = copy(img_gray)
+img_binary[img_gray .> 0.5] .= 1.0
+img_binary[img_gray .<= 0.5] .= 0.0
+img_binary = convert(Array{Int}, img_binary)
+# example_image1[3:12, 6:17] .= 1  # Create a bar of 1s. Size=10x12
+# example_image2 = zeros(Int, 100, 200)  # Ensure the matrix is of integer type
+# example_image2[6:17, 3:15] .= 1 # Create a bar of 1s. Size=12x13
+# example_image3 = zeros(Int, 100, 200)  # Ensure the matrix is of integer type
+# example_image3[20:45, 3:15] .= 1 # Create a bar of 1s. Size=26x13
+bar_coordinates1 = get_bar_coordinates(img_binary)
