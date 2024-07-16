@@ -1,3 +1,5 @@
+
+
 """
     scalebar!(img::AbstractArray, pxsize::Float64;      
         position::String,        
@@ -7,6 +9,8 @@
         color::Symbol = :white)
 
 Add scalebar to the input image.
+
+This is the major interface function for the package
 
 # Arguments
     img::AbstractArray         : A 2-dimensional array of pixels
@@ -22,12 +26,6 @@ Add scalebar to the input image.
     img array with scalebar
 """
 
-
-# main interface function:
-
-
-
-# Modified ver to add width parameter
 function scalebar!(img::AbstractArray, # updated function sigature with len_calc (-Ian)
     pxsize::Float64; 
     position::String = "br", 
@@ -94,6 +92,7 @@ Copy img and pass the copy to scalebar!()
 
     See Also [`scalebar!`]@ref
 """
+
 function scalebar(img::AbstractArray, # updated function sigature with len_calc (-Ian)
     pxsize::Float64; 
     position::String = "br", 

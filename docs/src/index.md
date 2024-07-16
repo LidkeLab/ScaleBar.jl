@@ -6,9 +6,9 @@ CurrentModule = ScaleBar
 
 Documentation for [ScaleBar](https://github.com/LidkeLab/ScaleBar.jl).
 
+```@index
+```
 
-```@docs
-scalebar_coords()
-scalebar_draw!()
-scalebar()
+```@autodocs
+Modules = [ScaleBar]
 ```
