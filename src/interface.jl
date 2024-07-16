@@ -1,5 +1,3 @@
-
-
 """
     scalebar!(img::AbstractArray, pxsize::Float64;      
         position::String,        
@@ -151,3 +149,4 @@ end
 # img = RGB.(ones(512,512))
 # scalebar!(img,0.5,color=:black)
 # img
+
