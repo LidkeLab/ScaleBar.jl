@@ -1,6 +1,5 @@
 module ScaleBar
 
-using Revise
 using Colors
 using Images
 

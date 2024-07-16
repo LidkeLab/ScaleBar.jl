@@ -25,7 +25,6 @@ This is the major interface function for the package
 # Returns
     img array with scalebar
 """
-
 function scalebar!(img::AbstractArray, # updated function sigature with len_calc (-Ian)
     pxsize::Float64; 
     position::String = "br", 
@@ -42,21 +41,21 @@ function scalebar!(img::AbstractArray, # updated function sigature with len_calc
     offset_x = round(Int,img_sizex/scale)
     offset_y = round(Int,img_sizey/scale)
     if position[1] == 'b'
-        x_i = img_sizey-width_bar-offset_y
-        x_f = img_sizey-offset_y
+        x_i = img_sizey - width_bar - offset_y + 1
+        x_f = img_sizey - offset_y
         #println("b")
     elseif position[1] == 't'
         x_i = offset_y
-        x_f = offset_y+width_bar
+        x_f = offset_y + width_bar - 1
         #println("t")
     end
     if position[2] == 'r'
-        y_i = img_sizex-len_bar-offset_x
-        y_f = img_sizex-offset_x
+        y_i = img_sizex - len_bar - offset_x + 1
+        y_f = img_sizex - offset_x
         #println("r")
     elseif position[2] == 'l'
         y_i = offset_x
-        y_f = offset_x+len_bar 
+        y_f = offset_x + len_bar - 1
         #println("l")
     end
     if color == :white
@@ -92,7 +91,6 @@ Copy img and pass the copy to scalebar!()
 
     See Also [`scalebar!`]@ref
 """
-
 function scalebar(img::AbstractArray, # updated function sigature with len_calc (-Ian)
     pxsize::Float64; 
     position::String = "br", 
@@ -120,7 +118,6 @@ Determine default scalebar length based on the dimensions of the input image.
     len : scalebar length dimension in pixels
     width : scalebar width dimension in pixels
 """ 
-
 function len_calc(img::Union{AbstractArray, Array{Float64}})
    
     # get the dimensions of the input image
