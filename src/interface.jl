@@ -1,5 +1,3 @@
-
-
 """
     scalebar!(img::AbstractArray, pxsize::Float64;      
         position::String,        
@@ -25,7 +23,6 @@ This is the major interface function for the package
 # Returns
     img array with scalebar
 """
-
 function scalebar!(img::AbstractArray, # updated function sigature with len_calc (-Ian)
     pxsize::Float64; 
     position::String = "br", 
@@ -92,7 +89,6 @@ Copy img and pass the copy to scalebar!()
 
     See Also [`scalebar!`]@ref
 """
-
 function scalebar(img::AbstractArray, # updated function sigature with len_calc (-Ian)
     pxsize::Float64; 
     position::String = "br", 
@@ -120,7 +116,6 @@ Determine default scalebar length based on the dimensions of the input image.
     len : scalebar length dimension in pixels
     width : scalebar width dimension in pixels
 """ 
-
 function len_calc(img::Union{AbstractArray, Array{Float64}})
    
     # get the dimensions of the input image
@@ -154,3 +149,4 @@ end
 # img = RGB.(ones(512,512))
 # scalebar!(img,0.5,color=:black)
 # img
+
