@@ -26,7 +26,8 @@ Create a blank image
 
 Add a scale bar
 ```julia
-  img_sb = scalebar!(img, pxsize = 1; position="br", len=50, width=5, scale = 15, color = :black)
+  pxsize = 1.0
+  img_sb = scalebar!(img, pxsize; position="br", len=50, width=5, scale = 15, color = :black)
 ```
 Note: the len and width argument default values are calculated based on the dimensions of img. Briefly, it will find 20% of the length and round down to a multiple of five. The dimensions should be printed in the REPL when these functions are called. This gives the user flexibility to call `scalebar()` again with tweaked dimensions.
 

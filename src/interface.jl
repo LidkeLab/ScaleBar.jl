@@ -57,11 +57,11 @@ function scalebar!(img::AbstractArray, # updated function sigature with len_calc
         #println("l")
     end
     if color == :white
-        return img[x_i:x_f, y_i:y_f] .= RGB(1,1,1) # Fill in the rectangle
+        img[x_i:x_f, y_i:y_f] .= RGB(1,1,1) # Fill in the rectangle
     elseif color == :black
-        return img[x_i:x_f, y_i:y_f] .= RGB(0,0,0) # Fill in the rectangle
+        img[x_i:x_f, y_i:y_f] .= RGB(0,0,0) # Fill in the rectangle
     end
-    
+    return nothing
 end   
 
 
