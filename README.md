@@ -6,12 +6,12 @@ This Julia script provides functions to add scale bars to images, facilitating v
 
 - **`scalebar!`**: Function to add a scale bar directly to an image array.
 - **`scalebar`**: Function to create a new image with a scale bar added.
-- **`scalebar_draw`**: Function to draw the scale bar on an image array.
 
 ## Simple Usage Example
 
 ```
   using Images
+  using ScaleBar
 ```
 
 Create a blank image
@@ -21,13 +21,11 @@ Create a blank image
 
 Add a scale bar
 ```
-  x_i, x_f, y_i, y_f = scalebar!(img, position="br", len=50, width=5)
+  img_sb = scalebar!(img, pxsize = 1; position="br", len=50, width=5, scale = 15, color = :black)
 ```
+Note: the len and width argument default values are calculated based on the dimensions of img. Briefly, it will find 20% of the length and round down to a multiple of five. The dimensions should be printed in the REPL when these functions are called. This gives the user flexibility to call `scalebar()` again with tweaked dimensions.
 
 Draw the scale bar
-```
-  scalebar_draw(img, x_i, x_f, y_i, y_f)
-```
 
 Display the image with the scale bar
 ```
