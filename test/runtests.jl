@@ -11,7 +11,7 @@ include("test_helpers.jl")
     # Test scenario
     img = Gray.(zeros(512,512))
     img_with_bar = scalebar(img, 1.0, color=:white, position="bl")
-    len::Real = len_calc(img)[1]   # length and width default to results of len_calc() from the helper code found in src/interface.jl
+    len::Real = len_calc(img)[1]   # length and width default to results of len_calc() from the helper function found in src/interface.jl
     binary_img_with_bar = img_with_bar
     binary_img_with_bar[img_with_bar .> 0.5] .= 1
     binary_img_with_bar[img_with_bar .<= 0.5] .= 0
