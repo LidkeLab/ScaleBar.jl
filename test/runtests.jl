@@ -10,8 +10,11 @@ include("test_helpers.jl")
 
     # Test scenario
     img = Gray.(zeros(512,512))
-    img_with_bar = scalebar(img, 1.0, color=:white, position="bl")
-    len::Real = len_calc(img)[1]   # length and width default to results of len_calc() from the helper function found in src/interface.jl
+    len = 100 # length of the scalebar in units
+    width = 20 # width of the scalebar in units
+    pxsize = 1.0 # size of a pixel in units
+    img_with_bar = scalebar(img, pxsize; color=:white, position="bl", len, width)
+    given_bar_size = len/pxsize # size of the bar in pixels given the length and pixel size
     binary_img_with_bar = img_with_bar
     binary_img_with_bar[img_with_bar .> 0.5] .= 1
     binary_img_with_bar[img_with_bar .<= 0.5] .= 0
@@ -21,7 +24,7 @@ include("test_helpers.jl")
    @testset "Size_test" begin
 
         bar_size1 = get_bar_size(bar_coordinates)
-        @test bar_size1 == len
+        @test bar_size1 == given_bar_size
 
     end
 
