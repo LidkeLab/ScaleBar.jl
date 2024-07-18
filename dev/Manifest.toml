@@ -1,6 +1,6 @@
 # This file is machine-generated - editing it directly is not advised
 
-julia_version = "1.10.2"
+julia_version = "1.10.3"
 manifest_format = "2.0"
 project_hash = "562fd97c6d1c7c37242790c806921d09eb3227b3"
 
@@ -242,7 +242,7 @@ weakdeps = ["Dates", "LinearAlgebra"]
 [[deps.CompilerSupportLibraries_jll]]
 deps = ["Artifacts", "Libdl"]
 uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
-version = "1.1.0+0"
+version = "1.1.1+0"
 
 [[deps.ComputationalResources]]
 git-tree-sha1 = "52cb3ec90e8a8bea0e62e275ba577ad0f74821f7"
@@ -1386,7 +1386,7 @@ version = "0.6.43"
 
 [[deps.ScaleBar]]
 deps = ["CairoMakie", "Colors", "Images", "Revise"]
-path = "C:\\Users\\klidke\\.julia\\dev\\ScaleBar"
+path = "/Users/mahsa/.julia/dev/ScaleBar"
 uuid = "b24819f0-15bd-425d-8fc0-a9d00d1e0559"
 version = "1.0.0-DEV"
 
