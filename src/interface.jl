@@ -28,8 +28,8 @@ function scalebar!(img::AbstractArray, # updated function sigature with len_calc
     position::Symbol = :br, 
     len::Real = len_calc(img)[1],    # length and width default to results of len_calc()
     width::Real = len_calc(img)[2],
-    offsetx::Int=10, # x offset in percentage of the image size
-    offsety::Int=10, # y offset in percentage of the image size
+    offsetx::Int=0.05, # x offset in percentage of the image size
+    offsety::Int=0.05, # y offset in percentage of the image size
     color::Symbol= :white ) # Added width parameter
     
     img_sizex = size(img,2)
@@ -37,8 +37,8 @@ function scalebar!(img::AbstractArray, # updated function sigature with len_calc
     len_bar = round(Int,len/pxsize)
     println("len_bar: ",len_bar)
     width_bar = round(Int,width/pxsize) # Use width parameter to set width_bar
-    offset_x = round(Int,offsetx/100*img_sizex)
-    offset_y = round(Int,offsety/100*img_sizey)
+    offset_x = round(Int,offsetx*img_sizex)
+    offset_y = round(Int,offsety*img_sizey)
     if position== :br
         x_i = img_sizey - width_bar - offset_y + 1
         x_f = img_sizey - offset_y
