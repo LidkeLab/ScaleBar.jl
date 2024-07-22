@@ -28,8 +28,8 @@ function scalebar!(img::AbstractArray, # updated function sigature with len_calc
     position::Symbol = :br, 
     len::Real = len_calc(img)[1],    # length and width default to results of len_calc()
     width::Real = len_calc(img)[2],
-    offsetx::Int=0.05, # x offset in percentage of the image size
-    offsety::Int=0.05, # y offset in percentage of the image size
+    offsetx::Float64=0.05, # x offset in percentage of the image size
+    offsety::Float64=0.05, # y offset in percentage of the image size
     color::Symbol= :white ) # Added width parameter
     
     img_sizex = size(img,2)
@@ -103,8 +103,8 @@ function scalebar(img::AbstractArray, # updated function sigature with len_calc 
     position::Symbol= :br, 
     len::Real = len_calc(img)[1],    # length and width default to results of len_calc()
     width::Real = len_calc(img)[2],
-    offsetx::Int=10,
-    offsety::Int=10,
+    offsetx::Float64=.05, # x offset in percentage of the image size
+    offsety::Float64=.05,
     color::Symbol= :white )  # Added width parameter
     
  img_new = deepcopy(img)

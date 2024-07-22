@@ -13,7 +13,7 @@ include("test_helpers.jl")
     len = 100 # length of the scalebar in units
     width = 20 # width of the scalebar in units
     pxsize = 1.0 # size of a pixel in units
-    img_with_bar = scalebar(img, pxsize; color=:white, position=:bl, len, width, offsetx=.1, offsety=.1) # image with scalebar
+    img_with_bar = scalebar(img, pxsize; color=:white, position=:bl, len, width, offsetx=.05, offsety=.05) # image with scalebar
     given_bar_size = len/pxsize # size of the bar in pixels given the length and pixel size
     binary_img_with_bar = img_with_bar
     binary_img_with_bar[img_with_bar .> 0.5] .= 1
