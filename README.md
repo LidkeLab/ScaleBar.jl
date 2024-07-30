@@ -19,15 +19,24 @@ This Julia script provides functions to add scale bars to images, facilitating v
   using ScaleBar
 ```
 
-Create a blank image
+
+Create a blank image and define the pixel size
+
 ```julia
   img = RGB.(ones(512, 512))
+  pxsize = 1.0
 ```
 
 Add a scale bar
 ```julia
-  pxsize = 1.0
-  img_sb = scalebar!(img, pxsize; position="br", len=50, width=5, scale = 15, color = :black)
+  img_sb = scalebar!(img, pxsize = 0.1; # the image and pixel size are required
+    # kwargs
+    position="br"  # set the position, "br" = bottom right
+    len=50 # the horizontal dimension in pixels
+    width=5 # the vertical dimension in pixels
+    scale = 15 # scale of the offset of the scalebar from the edge of the image. Applies to both dimensions.
+    color = :black) # currently supports :black and :white
+ 
 ```
 Note: the len and width argument default values are calculated based on the dimensions of img. Briefly, it will find 20% of the length and round down to a multiple of five. The dimensions should be printed in the REPL when these functions are called. This gives the user flexibility to call `scalebar()` again with tweaked dimensions.
 

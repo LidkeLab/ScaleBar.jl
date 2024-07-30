@@ -8,16 +8,15 @@
 
 Add scalebar to the input image.
 
-This is the major interface function for the package
 
 # Arguments
     img::AbstractArray         : A 2-dimensional array of pixels
     pxsize::Real               : pixel size
-    position::String           : "br" = bottom right, "ul" = upper left, etc. The default is "br"
-    len::Real                  : the scalebar length, in pixels. The default is determined by the "scalebar_length_calc.jl" function len_calc() 
+    position::String           : "br" = bottom right, "bl" = bottom left, "tr" = top right, "tl" = top left  The default is "br"
+    len::Real                  : the scalebar length, in pixels. The default is determined by the function len_calc() 
     width::Real                : similar to length
     scale::Int                 : scaling factor, default is 15
-    color::Symbol              : either `:black`` or `:white`
+    color::Symbol              : either `:white` (default) or `:black`
    
 
 # Returns
@@ -78,16 +77,15 @@ Copy img and pass the copy to scalebar!()
 # Arguments
     img::AbstractArray         : A 2-dimensional array of pixels
     pxsize::Real               : pixel size
-    position::String           : "br" = bottom right, "ul" = upper left, etc. The default is "br"
-    len::Real                  : the scalebar length, in pixels. The default is determined by the "scalebar_length_calc.jl" function len_calc() 
+    position::String           : "br" = bottom right, "bl" = bottom left, "tr" = top right, "tl" = top left  The default is "br"
+    len::Real                  : the scalebar length, in pixels. The default is determined by the function len_calc() 
     width::Real                : similar to length
     scale::Int                 : scaling factor, default is 15
-    color::Symbol              : either `:black`` or `:white`
-
+    color::Symbol              : either `:white` (default) or `:black`
+   
 # Returns
     A copy of img with scalebar applied
 
-    See Also [`scalebar!`]@ref
 """
 function scalebar(img::AbstractArray, # updated function sigature with len_calc (-Ian)
     pxsize::Float64; 
@@ -144,9 +142,3 @@ function len_calc(img::Union{AbstractArray, Array{Float64}})
     return len, width
 
 end
-
-# # test scale bar 
-# img = RGB.(ones(512,512))
-# scalebar!(img,0.5,color=:black)
-# img
-
