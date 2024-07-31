@@ -10,6 +10,7 @@ pxsize = 1.0
 scalebar!(img, pxsize; position="br", len=50, width=5, scale = 15, color = :white)
 display(img)
 
+
 # show out of place 
 img_in = RGB.(zeros(512, 512))
 display(img_in)
