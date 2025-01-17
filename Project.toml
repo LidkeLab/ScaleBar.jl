@@ -10,7 +10,7 @@ Images = "916415d5-f1e6-5110-898d-aaa5f9f070e0"
 Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
 
 [compat]
-CairoMakie = "0.12"
+CairoMakie = "0.12, 0.13"
 Colors = "0.12"
 Images = "0.26"
 Revise = "3"
