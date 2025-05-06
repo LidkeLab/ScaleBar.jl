@@ -9,8 +9,9 @@ Save an image to the test directory for visual inspection.
 """
 function save_test_image(img, filename)
     # Create output directory if it doesn't exist
-    isdir("test/output") || mkdir("test/output")
-    save("test/output/$(filename).png", img)
+    output_dir = joinpath(@__DIR__, "output")
+    isdir(output_dir) || mkdir(output_dir)
+    save(joinpath(output_dir, "$(filename).png"), img)
 end
 
 """

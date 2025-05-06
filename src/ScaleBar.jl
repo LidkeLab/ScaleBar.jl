@@ -3,9 +3,10 @@ module ScaleBar
 using Colors
 using Images
 
+include("core.jl")
 include("interface.jl")
 
-# Export only the public API
-export scalebar!, scalebar
+# Export the public API functions
+export scalebar, scalebar!
 
 end

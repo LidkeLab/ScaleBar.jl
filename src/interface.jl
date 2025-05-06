@@ -1,7 +1,5 @@
 using Images
 
-include("core.jl")
-
 """
     scalebar!(img, pixel_size; kwargs...)
 
