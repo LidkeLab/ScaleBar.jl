@@ -26,7 +26,7 @@ Pkg.add("ScaleBar")
 
 ### Physical Scale Bars
 
-When you know the physical size of each pixel (e.g., in microscopy applications), use the `scalebar` functions to add a scale bar with the appropriate physical dimensions:
+When you know the physical size of each pixel (e.g., in microscopy applications), use the `scalebar` functions with a pixel size parameter:
 
 ```julia
 using Images, ScaleBar
@@ -44,7 +44,7 @@ img_with_scalebar = scalebar(img, 0.1, physical_length=10, units="μm")
 
 ### Pixel-based Scale Bars
 
-When you just want a scale bar of a specific pixel length, use the `scalebar_pixels` functions:
+When you just want a scale bar of a specific pixel length, use the `scalebar` functions without a pixel size parameter:
 
 ```julia
 using Images, ScaleBar
@@ -54,10 +54,10 @@ img = RGB.(ones(512, 512))
 
 # Add a 50-pixel scale bar
 # This modifies the image in-place
-scalebar_pixels!(img, length=50)
+scalebar!(img, length=50)
 
 # Create a new image with a scale bar
-img_with_scalebar = scalebar_pixels(img, length=50)
+img_with_scalebar = scalebar(img, length=50)
 ```
 
 ## Positioning
@@ -66,16 +66,16 @@ You can position the scale bar at any of the four corners of the image using Cai
 
 ```julia
 # Top left
-scalebar_pixels!(img, position=:tl)
+scalebar!(img, position=:tl)
 
 # Top right
-scalebar_pixels!(img, position=:tr)
+scalebar!(img, position=:tr)
 
 # Bottom left
-scalebar_pixels!(img, position=:bl)
+scalebar!(img, position=:bl)
 
 # Bottom right (default)
-scalebar_pixels!(img, position=:br)
+scalebar!(img, position=:br)
 ```
 
 ## Customization
@@ -83,15 +83,16 @@ scalebar_pixels!(img, position=:br)
 You can customize various aspects of the scale bar:
 
 ```julia
-# Customize dimensions
+# Customize dimensions for a physical scale bar
 scalebar!(img, 0.1, 
     physical_length=10,   # Length in physical units
     width=5,              # Width in pixels
     padding=20)           # Padding from the edge
 
-# Customize appearance
-scalebar_pixels!(img,
+# Customize dimensions for a pixel-based scale bar
+scalebar!(img,
     length=50,            # Length in pixels
+    width=10,             # Width in pixels
     color=:black)         # Color (default is :white)
 ```
 
@@ -101,9 +102,9 @@ If no length is specified, the scale bar length will be automatically calculated
 
 ## API Reference
 
+ScaleBar.jl provides a clean, unified API with two main functions.
+
 ```@docs
-ScaleBar.scalebar
-ScaleBar.scalebar!
-ScaleBar.scalebar_pixels
-ScaleBar.scalebar_pixels!
+scalebar!
+scalebar
 ```

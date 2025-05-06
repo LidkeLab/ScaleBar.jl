@@ -5,7 +5,7 @@ using Images
 
 include("interface.jl")
 
+# Export only the public API
 export scalebar!, scalebar
-export scalebar_pixels!, scalebar_pixels
 
 end

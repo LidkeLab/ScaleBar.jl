@@ -48,7 +48,7 @@ using Images, ScaleBar
 img = RGB.(ones(512, 512))
 
 # Add a 50-pixel scale bar
-img_with_bar = scalebar_pixels(img, length=50)
+img_with_bar = scalebar(img, length=50)
 
 # Display the new image
 img_with_bar
@@ -56,12 +56,20 @@ img_with_bar
 
 ## API Reference
 
+ScaleBar.jl provides a clean, unified API with two main functions:
+
+- `scalebar!`: Modifies the image in-place
+- `scalebar`: Creates and returns a new image with the scale bar
+
+Each function has two methods:
+
 ### Working with Physical Units
 
-The primary API consists of two functions: `scalebar` (returns a new image) and `scalebar!` (modifies in-place).
-
 ```julia
+# In-place version
 scalebar!(img, pixel_size; position=:br, physical_length=auto, width=auto, padding=10, color=:white, units="")
+
+# Non-mutating version
 scalebar(img, pixel_size; position=:br, physical_length=auto, width=auto, padding=10, color=:white, units="")
 ```
 
@@ -79,11 +87,12 @@ scalebar(img, pixel_size; position=:br, physical_length=auto, width=auto, paddin
 
 ### Working with Pixel Dimensions
 
-For cases where you don't know or don't care about the physical scale, use these dedicated functions:
-
 ```julia
-scalebar_pixels!(img; position=:br, length=auto, width=auto, padding=10, color=:white)
-scalebar_pixels(img; position=:br, length=auto, width=auto, padding=10, color=:white)
+# In-place version
+scalebar!(img; position=:br, length=auto, width=auto, padding=10, color=:white)
+
+# Non-mutating version
+scalebar(img; position=:br, length=auto, width=auto, padding=10, color=:white)
 ```
 
 **Parameters**:
@@ -116,10 +125,10 @@ using Images, ScaleBar
 img = RGB.(ones(512, 512))
 
 # Add scale bars at different positions
-img_br = scalebar_pixels(img, position=:br, color=:black)  # Bottom right
-img_bl = scalebar_pixels(img, position=:bl, color=:black)  # Bottom left
-img_tr = scalebar_pixels(img, position=:tr, color=:black)  # Top right
-img_tl = scalebar_pixels(img, position=:tl, color=:black)  # Top left
+img_br = scalebar(img, position=:br, color=:black)  # Bottom right
+img_bl = scalebar(img, position=:bl, color=:black)  # Bottom left
+img_tr = scalebar(img, position=:tr, color=:black)  # Top right
+img_tl = scalebar(img, position=:tl, color=:black)  # Top left
 ```
 
 ### Customizing Dimensions
@@ -131,7 +140,7 @@ using Images, ScaleBar
 img = RGB.(ones(512, 512))
 
 # Add a custom-sized scale bar
-scalebar_pixels!(img, 
+scalebar!(img, 
     length=100,    # 100 pixels long
     width=15,      # 15 pixels tall
     padding=20,    # 20 pixels from the edge

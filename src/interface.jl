@@ -12,11 +12,11 @@ Add a scale bar to an image in-place, using physical units.
     pixel_size::Real : Size of each pixel in physical units (e.g., nm, μm)
 
 # Keyword Arguments
-    position::Symbol : Position of the scale bar (:tl, :tr, :bl, :br), default: :br
+    position::Symbol : Position of the scale bar (`:tl`, `:tr`, `:bl`, `:br`), default: `:br`
     physical_length::Real : Length of the scale bar in physical units, default: auto-calculated
     width::Integer : Width of the scale bar in pixels, default: auto-calculated
     padding::Integer : Padding from the edge of the image in pixels, default: 10
-    color::Symbol : Color of the scale bar (:white or :black), default: :white
+    color::Symbol : Color of the scale bar (`:white` or `:black`), default: `:white`
     units::String : Units for the physical length (e.g., "nm", "μm"), default: ""
 
 # Returns
@@ -78,6 +78,58 @@ function scalebar!(
 end
 
 """
+    scalebar!(img; kwargs...)
+
+Add a scale bar to an image in-place, specifying dimensions in pixels.
+
+# Arguments
+    img::AbstractArray : Input image
+
+# Keyword Arguments
+    position::Symbol : Position of the scale bar (`:tl`, `:tr`, `:bl`, `:br`), default: `:br`
+    length::Integer : Length of the scale bar in pixels, default: auto-calculated
+    width::Integer : Width of the scale bar in pixels, default: auto-calculated
+    padding::Integer : Padding from the edge of the image in pixels, default: 10
+    color::Symbol : Color of the scale bar (`:white` or `:black`), default: `:white`
+
+# Returns
+    Nothing, modifies img in-place
+
+# Examples
+```julia
+using Images, ScaleBar
+
+# Create a test image
+img = RGB.(ones(512, 512))
+
+# Add a 50-pixel scale bar
+scalebar!(img, length=50)
+```
+"""
+function scalebar!(
+    img::AbstractArray;
+    position::Symbol = :br,
+    length::Union{Integer, Nothing} = nothing,
+    width::Union{Integer, Nothing} = nothing,
+    padding::Integer = 10,
+    color::Symbol = :white
+)
+    # Calculate bar dimensions
+    length_px, width_px = calculate_bar_dimensions(img, length, width)
+    
+    # Get coordinates for the scale bar
+    coords = get_bar_coordinates(img, position, length_px, width_px, padding)
+    
+    # Draw the scale bar
+    draw_bar!(img, coords, color)
+    
+    # Print information about the scale bar
+    println("Scale bar: $(length_px)×$(width_px) pixels")
+    
+    return nothing
+end
+
+"""
     scalebar(img, pixel_size; kwargs...)
 
 Create a new image with a scale bar, using physical units.
@@ -87,11 +139,11 @@ Create a new image with a scale bar, using physical units.
     pixel_size::Real : Size of each pixel in physical units (e.g., nm, μm)
 
 # Keyword Arguments
-    position::Symbol : Position of the scale bar (:tl, :tr, :bl, :br), default: :br
+    position::Symbol : Position of the scale bar (`:tl`, `:tr`, `:bl`, `:br`), default: `:br`
     physical_length::Real : Length of the scale bar in physical units, default: auto-calculated
     width::Integer : Width of the scale bar in pixels, default: auto-calculated
     padding::Integer : Padding from the edge of the image in pixels, default: 10
-    color::Symbol : Color of the scale bar (:white or :black), default: :white
+    color::Symbol : Color of the scale bar (`:white` or `:black`), default: `:white`
     units::String : Units for the physical length (e.g., "nm", "μm"), default: ""
 
 # Returns
@@ -137,71 +189,19 @@ function scalebar(
 end
 
 """
-    scalebar_pixels!(img; kwargs...)
+    scalebar(img; kwargs...)
 
-Add a scale bar to an image in-place, specifying dimensions in pixels directly.
-
-# Arguments
-    img::AbstractArray : Input image
-
-# Keyword Arguments
-    position::Symbol : Position of the scale bar (:tl, :tr, :bl, :br), default: :br
-    length::Integer : Length of the scale bar in pixels, default: auto-calculated
-    width::Integer : Width of the scale bar in pixels, default: auto-calculated
-    padding::Integer : Padding from the edge of the image in pixels, default: 10
-    color::Symbol : Color of the scale bar (:white or :black), default: :white
-
-# Returns
-    Nothing, modifies img in-place
-
-# Examples
-```julia
-using Images, ScaleBar
-
-# Create a test image
-img = RGB.(ones(512, 512))
-
-# Add a 50-pixel scale bar
-scalebar_pixels!(img, length=50)
-```
-"""
-function scalebar_pixels!(
-    img::AbstractArray;
-    position::Symbol = :br,
-    length::Union{Integer, Nothing} = nothing,
-    width::Union{Integer, Nothing} = nothing,
-    padding::Integer = 10,
-    color::Symbol = :white
-)
-    # Calculate bar dimensions
-    length_px, width_px = calculate_bar_dimensions(img, length, width)
-    
-    # Get coordinates for the scale bar
-    coords = get_bar_coordinates(img, position, length_px, width_px, padding)
-    
-    # Draw the scale bar
-    draw_bar!(img, coords, color)
-    
-    # Print information about the scale bar
-    println("Scale bar: $(length_px)×$(width_px) pixels")
-    
-    return nothing
-end
-
-"""
-    scalebar_pixels(img; kwargs...)
-
-Create a new image with a scale bar, specifying dimensions in pixels directly.
+Create a new image with a scale bar, specifying dimensions in pixels.
 
 # Arguments
     img::AbstractArray : Input image
 
 # Keyword Arguments
-    position::Symbol : Position of the scale bar (:tl, :tr, :bl, :br), default: :br
+    position::Symbol : Position of the scale bar (`:tl`, `:tr`, `:bl`, `:br`), default: `:br`
     length::Integer : Length of the scale bar in pixels, default: auto-calculated
     width::Integer : Width of the scale bar in pixels, default: auto-calculated
     padding::Integer : Padding from the edge of the image in pixels, default: 10
-    color::Symbol : Color of the scale bar (:white or :black), default: :white
+    color::Symbol : Color of the scale bar (`:white` or `:black`), default: `:white`
 
 # Returns
     A new image with the scale bar added
@@ -214,10 +214,10 @@ using Images, ScaleBar
 img = RGB.(ones(512, 512))
 
 # Add a 50-pixel scale bar
-img_with_scalebar = scalebar_pixels(img, length=50)
+img_with_scalebar = scalebar(img, length=50)
 ```
 """
-function scalebar_pixels(
+function scalebar(
     img::AbstractArray;
     position::Symbol = :br,
     length::Union{Integer, Nothing} = nothing,
@@ -229,7 +229,7 @@ function scalebar_pixels(
     img_copy = deepcopy(img)
     
     # Add the scale bar to the copy
-    scalebar_pixels!(
+    scalebar!(
         img_copy;
         position=position,
         length=length,

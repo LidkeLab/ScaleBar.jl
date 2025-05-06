@@ -29,7 +29,7 @@ using Images, ScaleBar
 img = RGB.(ones(512, 512))
 
 # Add a 50-pixel scale bar
-img_with_bar = scalebar_pixels(img, length=50, color=:black)
+img_with_bar = scalebar(img, length=50, color=:black)
 ```
 
 ## Positioning Examples
@@ -38,16 +38,16 @@ Scale bars can be positioned at any of the four corners of the image:
 
 ```julia
 # Bottom right (default)
-scalebar_pixels!(img, position=:br)
+scalebar!(img, position=:br)
 
 # Bottom left
-scalebar_pixels!(img, position=:bl)
+scalebar!(img, position=:bl)
 
 # Top right
-scalebar_pixels!(img, position=:tr)
+scalebar!(img, position=:tr)
 
 # Top left
-scalebar_pixels!(img, position=:tl)
+scalebar!(img, position=:tl)
 ```
 
 ## Customization Examples
@@ -56,14 +56,14 @@ You can customize various aspects of the scale bar:
 
 ```julia
 # Custom dimensions
-scalebar_pixels!(img, 
+scalebar!(img, 
     length=100,    # 100 pixels long
     width=10,      # 10 pixels tall
     padding=20     # 20 pixels from the edge
 )
 
 # Custom color
-scalebar_pixels!(img, color=:black)  # Black scale bar (default is white)
+scalebar!(img, color=:black)  # Black scale bar (default is white)
 ```
 
 ## Real-world Examples
