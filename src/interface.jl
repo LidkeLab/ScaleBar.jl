@@ -1,162 +1,240 @@
+using Images
+
 """
-    scalebar!(img::AbstractArray, pxsize::Float64;      
-        position::String,        
-        len::Real, 
-        width::Real,
-        scale::Int,
-        color::Symbol = :white)
+    scalebar!(img, pixel_size; kwargs...)
 
-Add scalebar to the input image.
-
+Add a scale bar to an image in-place, using physical units.
 
 # Arguments
-    img::AbstractArray         : A 2-dimensional array of pixels
-    pxsize::Real               : pixel size
-    position::String           : "br" = bottom right, "bl" = bottom left, "tr" = top right, "tl" = top left  The default is "br"
-    len::Real                  : the scalebar length, in pixels. The default is determined by the function len_calc() 
-    width::Real                : similar to length
-    scale::Int                 : scaling factor, default is 15
-    color::Symbol              : either `:white` (default) or `:black`
-   
+    img::AbstractArray : Input image
+    pixel_size::Real : Size of each pixel in physical units (e.g., nm, μm)
+
+# Keyword Arguments
+    position::Symbol : Position of the scale bar (`:tl`, `:tr`, `:bl`, `:br`), default: `:br`
+    physical_length::Real : Length of the scale bar in physical units, default: auto-calculated
+    width::Integer : Width of the scale bar in pixels, default: auto-calculated
+    padding::Integer : Padding from the edge of the image in pixels, default: 10
+    color::Symbol : Color of the scale bar (`:white` or `:black`), default: `:white`
+    units::String : Units for the physical length (e.g., "nm", "μm"), default: ""
 
 # Returns
-    img array with scalebar
+    Nothing, modifies img in-place
+
+# Examples
+```julia
+using Images, ScaleBar
+
+# Create a test image
+img = RGB.(ones(512, 512))
+
+# Add a scale bar representing 10μm (assuming 0.1μm per pixel)
+scalebar!(img, 0.1, physical_length=10, units="μm")
+```
 """
-function scalebar!(img::AbstractArray, # updated function sigature with len_calc (-Ian)
-    pxsize::Float64; 
-    position::Symbol = :br, 
-    len::Real = len_calc(img)[1],    # length and width default to results of len_calc()
-    width::Real = len_calc(img)[2],
-    offsetx::Float64=0.05, # x offset in percentage of the image size
-    offsety::Float64=0.05, # y offset in percentage of the image size
-    color::Symbol= :white ) # Added width parameter
-    
-    img_sizex = size(img,2)
-    img_sizey = size(img,1)
-    len_bar = round(Int,len/pxsize)
-    println("len_bar: ",len_bar)
-    width_bar = round(Int,width/pxsize) # Use width parameter to set width_bar
-    offset_x = round(Int,offsetx*img_sizex)
-    offset_y = round(Int,offsety*img_sizey)
-    if position== :br
-        x_i = img_sizey - width_bar - offset_y + 1
-        x_f = img_sizey - offset_y
-        y_i = img_sizex - len_bar - offset_x + 1
-        y_f = img_sizex - offset_x
-        #println("b")
-    elseif position == :bl
-        x_i = img_sizey - width_bar - offset_y + 1
-        x_f = img_sizey - offset_y
-        y_i = offset_x
-        y_f = offset_x + len_bar - 1
-        #println("bl")
-    elseif position == :tl
-        x_i = offset_y
-        x_f = offset_y + width_bar - 1
-        y_i = offset_x
-        y_f = offset_x + len_bar - 1
-        #println("ul")
-    elseif position == :tr
-        x_i = offset_y
-        x_f = offset_y + width_bar - 1
-        y_i = img_sizex - len_bar - offset_x + 1
-        y_f = img_sizex - offset_x
-        #println("ur")
-    end
-   
-    if color == :white
-        return img[x_i:x_f, y_i:y_f] .= RGB(1,1,1) # Fill in the rectangle
-    elseif color == :black
-        return img[x_i:x_f, y_i:y_f] .= RGB(0,0,0) # Fill in the rectangle
+function scalebar!(
+    img::AbstractArray,
+    pixel_size::Real;
+    position::Symbol = :br,
+    physical_length::Union{Real, Nothing} = nothing,
+    width::Union{Integer, Nothing} = nothing,
+    padding::Integer = 10,
+    color::Symbol = :white,
+    units::String = ""
+)
+    # Validate inputs
+    if pixel_size <= 0
+        throw(ArgumentError("pixel_size must be positive"))
     end
     
-end   
-
-
-"""
-    scalebar(img::AbstractArray, pxsize::Float64;      
-        position::String,        
-        len::Real, 
-        scale::Int,
-        width::Real,
-        color::Symbol = :white)
-
-Copy img and pass the copy to scalebar!()
-
-# Arguments
-    img::AbstractArray         : A 2-dimensional array of pixels
-    pxsize::Real               : pixel size
-    position::String           : "br" = bottom right, "bl" = bottom left, "tr" = top right, "tl" = top left  The default is "br"
-    len::Real                  : the scalebar length, in pixels. The default is determined by the function len_calc() 
-    width::Real                : similar to length
-    scale::Int                 : scaling factor, default is 15
-    color::Symbol              : either `:white` (default) or `:black`
-   
-# Returns
-    A copy of img with scalebar applied
-
-"""
-function scalebar(img::AbstractArray, # updated function sigature with len_calc (-Ian)
-    pxsize::Float64; 
-    position::Symbol= :br, 
-    len::Real = len_calc(img)[1],    # length and width default to results of len_calc()
-    width::Real = len_calc(img)[2],
-    offsetx::Float64=.05, # x offset in percentage of the image size
-    offsety::Float64=.05,
-    color::Symbol= :white )  # Added width parameter
+    # Calculate length in pixels if physical_length is provided
+    if !isnothing(physical_length)
+        if physical_length <= 0
+            throw(ArgumentError("physical_length must be positive"))
+        end
+        length_px = round(Int, physical_length / pixel_size)
+    else
+        length_px = nothing
+    end
     
- img_new = deepcopy(img)
- scalebar!(img_new,pxsize,position=position,len=len,offsetx=offsetx,offsety=offsety,width=width,color=color) # Added width parameter
- return img_new 
+    # Calculate bar dimensions
+    length_px, width_px = calculate_bar_dimensions(img, length_px, width)
+    
+    # Calculate actual physical length represented by the scale bar
+    actual_physical_length = length_px * pixel_size
+    
+    # Get coordinates for the scale bar
+    coords = get_bar_coordinates(img, position, length_px, width_px, padding)
+    
+    # Draw the scale bar
+    draw_bar!(img, coords, color)
+    
+    # Print information about the scale bar
+    unit_suffix = isempty(units) ? "" : " $(units)"
+    println("Scale bar: $(round(actual_physical_length, digits=2))$(unit_suffix) ($(length_px)×$(width_px) pixels)")
+    
+    return nothing
 end
 
+"""
+    scalebar!(img; kwargs...)
 
-
-""" 
-    len_calc(img::AbstractArray)
-
-Determine default scalebar length based on the dimensions of the input image. 
+Add a scale bar to an image in-place, specifying dimensions in pixels.
 
 # Arguments
-    img::AbstractArray : input array containing image data
+    img::AbstractArray : Input image
+
+# Keyword Arguments
+    position::Symbol : Position of the scale bar (`:tl`, `:tr`, `:bl`, `:br`), default: `:br`
+    length::Integer : Length of the scale bar in pixels, default: auto-calculated
+    width::Integer : Width of the scale bar in pixels, default: auto-calculated
+    padding::Integer : Padding from the edge of the image in pixels, default: 10
+    color::Symbol : Color of the scale bar (`:white` or `:black`), default: `:white`
 
 # Returns
-    len : scalebar length dimension in pixels
-    width : scalebar width dimension in pixels
-""" 
-function len_calc(img::Union{AbstractArray, Array{Float64}})
-   
-    # get the dimensions of the input image
-    len_dim = size(img)[2]
-    
-    # find 20% the length of the image
-    len_sb = 0.1 .* len_dim
-    
-    # find the nearest multiple of 5
-    if len_sb > 150
-        sb_len = (len_sb +(100-len_sb%100))
-    else 
-        sb_len = (len_sb-len_sb%5)
-    end
-    
+    Nothing, modifies img in-place
 
-    # set the width based on the length 
-    
-    sb_wid = sb_len*.25
-    sb_wid = sb_wid - sb_wid %5
-    sb_dims = (sb_len, sb_wid)
-    
-    println("default scalebar dimensions calculated:", sb_dims)
-        
-    len = convert(Int, sb_len)
-    println("len: ",len)
-    width = convert(Int, sb_wid)
-    println("width: ",width)
-    return len, width
+# Examples
+```julia
+using Images, ScaleBar
 
+# Create a test image
+img = RGB.(ones(512, 512))
+
+# Add a 50-pixel scale bar
+scalebar!(img, length=50)
+```
+"""
+function scalebar!(
+    img::AbstractArray;
+    position::Symbol = :br,
+    length::Union{Integer, Nothing} = nothing,
+    width::Union{Integer, Nothing} = nothing,
+    padding::Integer = 10,
+    color::Symbol = :white
+)
+    # Calculate bar dimensions
+    length_px, width_px = calculate_bar_dimensions(img, length, width)
+    
+    # Get coordinates for the scale bar
+    coords = get_bar_coordinates(img, position, length_px, width_px, padding)
+    
+    # Draw the scale bar
+    draw_bar!(img, coords, color)
+    
+    # Print information about the scale bar
+    println("Scale bar: $(length_px)×$(width_px) pixels")
+    
+    return nothing
 end
 
-# # test scale bar 
-#img = RGB.(ones(512,512))
-#scalebar!(img,0.5,color=:black)
-#img
+"""
+    scalebar(img, pixel_size; kwargs...)
+
+Create a new image with a scale bar, using physical units.
+
+# Arguments
+    img::AbstractArray : Input image
+    pixel_size::Real : Size of each pixel in physical units (e.g., nm, μm)
+
+# Keyword Arguments
+    position::Symbol : Position of the scale bar (`:tl`, `:tr`, `:bl`, `:br`), default: `:br`
+    physical_length::Real : Length of the scale bar in physical units, default: auto-calculated
+    width::Integer : Width of the scale bar in pixels, default: auto-calculated
+    padding::Integer : Padding from the edge of the image in pixels, default: 10
+    color::Symbol : Color of the scale bar (`:white` or `:black`), default: `:white`
+    units::String : Units for the physical length (e.g., "nm", "μm"), default: ""
+
+# Returns
+    A new image with the scale bar added
+
+# Examples
+```julia
+using Images, ScaleBar
+
+# Create a test image
+img = RGB.(ones(512, 512))
+
+# Add a scale bar representing 10μm (assuming 0.1μm per pixel)
+img_with_scalebar = scalebar(img, 0.1, physical_length=10, units="μm")
+```
+"""
+function scalebar(
+    img::AbstractArray,
+    pixel_size::Real;
+    position::Symbol = :br,
+    physical_length::Union{Real, Nothing} = nothing,
+    width::Union{Integer, Nothing} = nothing,
+    padding::Integer = 10,
+    color::Symbol = :white,
+    units::String = ""
+)
+    # Create a copy of the input image
+    img_copy = deepcopy(img)
+    
+    # Add the scale bar to the copy
+    scalebar!(
+        img_copy,
+        pixel_size;
+        position=position,
+        physical_length=physical_length,
+        width=width,
+        padding=padding,
+        color=color,
+        units=units
+    )
+    
+    return img_copy
+end
+
+"""
+    scalebar(img; kwargs...)
+
+Create a new image with a scale bar, specifying dimensions in pixels.
+
+# Arguments
+    img::AbstractArray : Input image
+
+# Keyword Arguments
+    position::Symbol : Position of the scale bar (`:tl`, `:tr`, `:bl`, `:br`), default: `:br`
+    length::Integer : Length of the scale bar in pixels, default: auto-calculated
+    width::Integer : Width of the scale bar in pixels, default: auto-calculated
+    padding::Integer : Padding from the edge of the image in pixels, default: 10
+    color::Symbol : Color of the scale bar (`:white` or `:black`), default: `:white`
+
+# Returns
+    A new image with the scale bar added
+
+# Examples
+```julia
+using Images, ScaleBar
+
+# Create a test image
+img = RGB.(ones(512, 512))
+
+# Add a 50-pixel scale bar
+img_with_scalebar = scalebar(img, length=50)
+```
+"""
+function scalebar(
+    img::AbstractArray;
+    position::Symbol = :br,
+    length::Union{Integer, Nothing} = nothing,
+    width::Union{Integer, Nothing} = nothing,
+    padding::Integer = 10,
+    color::Symbol = :white
+)
+    # Create a copy of the input image
+    img_copy = deepcopy(img)
+    
+    # Add the scale bar to the copy
+    scalebar!(
+        img_copy;
+        position=position,
+        length=length,
+        width=width,
+        padding=padding,
+        color=color
+    )
+    
+    return img_copy
+end
