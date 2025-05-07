@@ -75,10 +75,41 @@ scalebar!(img_float, 0.1, physical_length=10, units="μm")
 # When saving to images, normalize to [0,1] range (e.g., img ./= maximum(img))
 ```
 
+## Positioning
+
+You can position the scale bar at any of the four corners of the image using CairoMakie-style positioning symbols:
+
+```julia
+# Top left
+scalebar!(img, position=:tl)
+
+# Top right
+scalebar!(img, position=:tr)
+
+# Bottom left
+scalebar!(img, position=:bl)
+
+# Bottom right (default)
+scalebar!(img, position=:br)
+```
+
+## API Documentation
+
+For a comprehensive overview of the API, use the help mode on `api_overview`:
+
+```julia
+?ScaleBar.api_overview
+```
+
+Or access the complete API documentation programmatically:
+
+```julia
+docs = ScaleBar.api_overview()
+```
+
 ## API Reference
 
 ```@docs
 scalebar!
 scalebar
 ```
-

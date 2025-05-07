@@ -1,3 +1,92 @@
+using Images
+using ScaleBar
+using FileIO
+
+"""
+    save_test_image(img, filename)
+
+Save an image to the test directory for visual inspection.
+"""
+function save_test_image(img, filename)
+    # Create output directory if it doesn't exist
+    output_dir = joinpath(@__DIR__, "output")
+    isdir(output_dir) || mkdir(output_dir)
+    save(joinpath(output_dir, "$(filename).png"), img)
+end
+
+"""
+    create_test_image(height, width; background=1.0)
+
+Create a test image of given dimensions with optional background color.
+"""
+function create_test_image(height, width; background=1.0)
+    return RGB.(fill(background, height, width))
+end
+
+"""
+    create_gradient_image(height, width)
+
+Create a test image with a gradient pattern for better visibility of scale bars.
+"""
+function create_gradient_image(height, width)
+    img = zeros(RGB{Float64}, height, width)
+    for i in 1:height
+        for j in 1:width
+            img[i, j] = RGB(i/height, j/width, 0.5)
+        end
+    end
+    return img
+end
+
+"""
+    verify_scalebar_placement(img, position, length_px, width_px, padding)
+
+Verify that a scale bar is correctly placed on the image according to the specified parameters.
+
+Returns a tuple of (success::Bool, message::String)
+"""
+function verify_scalebar_placement(img, position, length_px, width_px, padding)
+    height, width = size(img)
+    
+    # Determine the expected region where the scale bar should be
+    if position == :br
+        expected_region = (
+            (height - padding - width_px + 1):(height - padding),
+            (width - padding - length_px + 1):(width - padding)
+        )
+    elseif position == :bl
+        expected_region = (
+            (height - padding - width_px + 1):(height - padding),
+            padding:(padding + length_px - 1)
+        )
+    elseif position == :tr
+        expected_region = (
+            padding:(padding + width_px - 1),
+            (width - padding - length_px + 1):(width - padding)
+        )
+    elseif position == :tl
+        expected_region = (
+            padding:(padding + width_px - 1),
+            padding:(padding + length_px - 1)
+        )
+    else
+        return (false, "Invalid position: $position")
+    end
+    
+    # Check if all pixels in the expected region are the same color
+    rows, cols = expected_region
+    first_pixel = img[first(rows), first(cols)]
+    
+    for i in rows
+        for j in cols
+            if img[i, j] != first_pixel
+                return (false, "Scale bar is not uniform in color at position ($i, $j)")
+            end
+        end
+    end
+    
+    return (true, "Scale bar is correctly placed and uniform in color")
+end
 
 """
     create_test_image(height, width; background=0.5)
@@ -90,12 +179,13 @@ function get_bar_orientation(bar_coordinates::Matrix{Int})
 end
 
 """
-    get_bar_position(bar_coordinates::Matrix{Int}, image_size::Tuple{Int, Int})
+    get_bar_position(bar_coordinates::Matrix{Int}, image::Array)
 
 Get the position of the bar in the image.
 
 # Arguments
 - `bar_coordinates::Matrix{Int}`: A 2-column matrix with the x and y coordinates of the bar.
+- `image::Array`: The image containing the bar.
 
 # Returns
 - `bar_position::Symbol`: The position of the bar.
