@@ -24,16 +24,14 @@ scalebar!(img, pixel_size, physical_length;
     width=nothing, 
     padding=10, 
     color=:white, 
-    units="",
-    quiet=false)
+    units="")
 
 # With pixel dimensions
 scalebar!(img, length; 
     position=:br, 
     width=nothing, 
     padding=10, 
-    color=:white,
-    quiet=false)
+    color=:white)
 ```
 
 ### `scalebar` - Non-destructive Scale Bar Addition
@@ -48,8 +46,7 @@ img_with_bar1 = scalebar(img, pixel_size;
     width=nothing, 
     padding=10, 
     color=:white, 
-    units="",
-    quiet=false)
+    units="")
 
 # Explicit length
 img_with_bar2 = scalebar(img, pixel_size; 
@@ -58,8 +55,7 @@ img_with_bar2 = scalebar(img, pixel_size;
     width=nothing, 
     padding=10, 
     color=:white, 
-    units="",
-    quiet=false)
+    units="")
 
 # With pixel dimensions
 # Auto-calculated length
@@ -67,8 +63,7 @@ img_with_bar3 = scalebar(img;
     position=:br, 
     width=nothing, 
     padding=10, 
-    color=:white,
-    quiet=false)
+    color=:white)
 
 # Explicit length
 img_with_bar4 = scalebar(img; 
@@ -76,8 +71,7 @@ img_with_bar4 = scalebar(img;
     position=:br, 
     width=nothing, 
     padding=10, 
-    color=:white,
-    quiet=false)
+    color=:white)
 ```
 
 ## Parameters
@@ -89,7 +83,6 @@ img_with_bar4 = scalebar(img;
 - `width`: Width of the scale bar in pixels, default: auto-calculated (20% of length, odd number)
 - `padding`: Padding from the edge of the image in pixels, default: 10
 - `color`: Color of the scale bar (`:white` or `:black`), default: `:white`
-- `quiet`: If true, suppresses console output, default: false
 
 ### Physical Units Method Parameters
 
@@ -214,15 +207,15 @@ img_with_bar = scalebar(img, 0.1;
     units="μm")
 ```
 
-## Suppressing Console Output
+## Processing Multiple Images
 
-When processing multiple images, you can suppress the console output:
+Examples of processing multiple images in a batch:
 
 ```julia
-# Process multiple images quietly with in-place modification
+# Process multiple images with in-place modification
 for file in image_files
     img = load(file)
-    scalebar!(img, 0.1, 10; units="μm", quiet=true)
+    scalebar!(img, 0.1, 10; units="μm")
     save("with_scalebar_$(file)", img)
 end
 
@@ -230,7 +223,7 @@ end
 processed_images = []
 for file in image_files
     img = load(file)
-    img_with_bar = scalebar(img, 0.1; physical_length=10, units="μm", quiet=true)
+    img_with_bar = scalebar(img, 0.1; physical_length=10, units="μm")
     push!(processed_images, img_with_bar)
 end
 ```

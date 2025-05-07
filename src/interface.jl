@@ -16,7 +16,6 @@ Add a scale bar to an image in-place, using physical units.
     padding::Integer : Padding from the edge of the image in pixels, default: 10
     color::Symbol : Color of the scale bar (`:white` or `:black`), default: `:white`
     units::String : Units for the physical length (e.g., "nm", "μm"), default: ""
-    quiet::Bool : If true, suppresses console output, default: false
 
 # Returns
     Nothing, modifies img in-place
@@ -40,8 +39,7 @@ function scalebar!(
     width::Union{Integer, Nothing} = nothing,
     padding::Integer = 10,
     color::Symbol = :white,
-    units::String = "",
-    quiet::Bool = false
+    units::String = ""
 )
     # Validate inputs
     if pixel_size <= 0
@@ -75,12 +73,6 @@ function scalebar!(
     # Draw the scale bar
     draw_bar!(img, coords, color)
     
-    # Print information about the scale bar (unless quiet mode is enabled)
-    if !quiet
-        unit_suffix = isempty(units) ? "" : " $(units)"
-        println("Scale bar: $(round(physical_length, digits=2))$(unit_suffix) ($(length_px)×$(width_px) pixels)")
-    end
-    
     return nothing
 end
 
@@ -98,7 +90,6 @@ Add a scale bar to an image in-place, specifying dimensions in pixels.
     width::Integer : Width of the scale bar in pixels, default: auto-calculated
     padding::Integer : Padding from the edge of the image in pixels, default: 10
     color::Symbol : Color of the scale bar (`:white` or `:black`), default: `:white`
-    quiet::Bool : If true, suppresses console output, default: false
 
 # Returns
     Nothing, modifies img in-place
@@ -120,8 +111,7 @@ function scalebar!(
     position::Symbol = :br,
     width::Union{Integer, Nothing} = nothing,
     padding::Integer = 10,
-    color::Symbol = :white,
-    quiet::Bool = false
+    color::Symbol = :white
 )
     # Validate inputs
     if length <= 0
@@ -148,11 +138,6 @@ function scalebar!(
     # Draw the scale bar
     draw_bar!(img, coords, color)
     
-    # Print information about the scale bar (unless quiet mode is enabled)
-    if !quiet
-        println("Scale bar: $(length)×$(width_px) pixels")
-    end
-    
     return nothing
 end
 
@@ -172,7 +157,6 @@ Create a new image with a scale bar, using physical units.
     padding::Integer : Padding from the edge of the image in pixels, default: 10
     color::Symbol : Color of the scale bar (`:white` or `:black`), default: `:white`
     units::String : Units for the physical length (e.g., "nm", "μm"), default: ""
-    quiet::Bool : If true, suppresses console output, default: false
 
 # Returns
     A new image with the scale bar added
@@ -199,8 +183,7 @@ function scalebar(
     width::Union{Integer, Nothing} = nothing,
     padding::Integer = 10,
     color::Symbol = :white,
-    units::String = "",
-    quiet::Bool = false
+    units::String = ""
 )
     # Create a copy of the input image
     img_copy = deepcopy(img)
@@ -223,8 +206,7 @@ function scalebar(
             width=width,
             padding=padding,
             color=color,
-            units=units,
-            quiet=quiet
+            units=units
         )
     else
         # Add the scale bar to the copy with the provided physical length
@@ -236,8 +218,7 @@ function scalebar(
             width=width,
             padding=padding,
             color=color,
-            units=units,
-            quiet=quiet
+            units=units
         )
     end
     
@@ -258,7 +239,6 @@ Create a new image with a scale bar, specifying dimensions in pixels.
     width::Union{Integer, Nothing} : Width of the scale bar in pixels, default: auto-calculated
     padding::Integer : Padding from the edge of the image in pixels, default: 10
     color::Symbol : Color of the scale bar (`:white` or `:black`), default: `:white`
-    quiet::Bool : If true, suppresses console output, default: false
 
 # Returns
     A new image with the scale bar added
@@ -283,8 +263,7 @@ function scalebar(
     position::Symbol = :br,
     width::Union{Integer, Nothing} = nothing,
     padding::Integer = 10,
-    color::Symbol = :white,
-    quiet::Bool = false
+    color::Symbol = :white
 )
     # Create a copy of the input image
     img_copy = deepcopy(img)
@@ -303,8 +282,7 @@ function scalebar(
             position=position,
             width=width,
             padding=padding,
-            color=color,
-            quiet=quiet
+            color=color
         )
     else
         # Add the scale bar to the copy with the provided length
@@ -314,8 +292,7 @@ function scalebar(
             position=position,
             width=width,
             padding=padding,
-            color=color,
-            quiet=quiet
+            color=color
         )
     end
     

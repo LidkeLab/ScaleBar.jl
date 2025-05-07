@@ -92,8 +92,7 @@ function demo_custom_appearance()
             position=position, 
             width=10,
             padding=15,
-            color=color,
-            quiet=true  # Suppress console output
+            color=color
         )
         
         # Save the image

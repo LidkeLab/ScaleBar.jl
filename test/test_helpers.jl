@@ -14,29 +14,7 @@ function save_test_image(img, filename)
     save(joinpath(output_dir, "$(filename).png"), img)
 end
 
-"""
-    create_test_image(height, width; background=1.0)
-
-Create a test image of given dimensions with optional background color.
-"""
-function create_test_image(height, width; background=1.0)
-    return RGB.(fill(background, height, width))
-end
-
-"""
-    create_gradient_image(height, width)
-
-Create a test image with a gradient pattern for better visibility of scale bars.
-"""
-function create_gradient_image(height, width)
-    img = zeros(RGB{Float64}, height, width)
-    for i in 1:height
-        for j in 1:width
-            img[i, j] = RGB(i/height, j/width, 0.5)
-        end
-    end
-    return img
-end
+# Functions moved to avoid duplicates
 
 """
     verify_scalebar_placement(img, position, length_px, width_px, padding)
