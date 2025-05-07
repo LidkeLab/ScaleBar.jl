@@ -124,7 +124,7 @@ Draw a scale bar on an image at the specified coordinates.
 # Returns
     Nothing, modifies img in place
 """
-function draw_bar!(img, coords, color)
+function draw_bar!(img::AbstractArray{<:Colorant}, coords, color)
     row_start, row_end, col_start, col_end = coords
     
     # Convert symbol to RGB value
@@ -138,6 +138,46 @@ function draw_bar!(img, coords, color)
     
     # Draw the scale bar
     img[row_start:row_end, col_start:col_end] .= rgb_value
+    
+    return nothing
+end
+
+"""
+    draw_bar!(img, coords, color)
+
+Draw a scale bar on a numeric array at the specified coordinates.
+For numeric arrays (Float64, etc.), uses 1.0 for white and 0.0 for black.
+If the array has values > 1.0, uses the maximum value for white.
+
+# Arguments
+    img::AbstractArray{<:Real} : Input image (numeric array)
+    coords::Tuple : (row_start, row_end, col_start, col_end)
+    color::Symbol : Color of the scale bar (:white or :black)
+
+# Returns
+    Nothing, modifies img in place
+"""
+function draw_bar!(img::AbstractArray{<:Real}, coords, color)
+    row_start, row_end, col_start, col_end = coords
+    
+    # Find the maximum value in the array for scaling
+    max_val = maximum(img)
+    
+    # Convert symbol to numeric value, using max_val for white if values > 1.0
+    if color == :white
+        if max_val > 1.0
+            value = max_val
+        else
+            value = 1.0
+        end
+    elseif color == :black
+        value = 0.0
+    else
+        throw(ArgumentError("Unsupported color: $color. Supported colors are :white and :black"))
+    end
+    
+    # Draw the scale bar
+    img[row_start:row_end, col_start:col_end] .= value
     
     return nothing
 end

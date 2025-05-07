@@ -89,6 +89,32 @@ function verify_scalebar_placement(img, position, length_px, width_px, padding)
 end
 
 """
+    create_test_image(height, width; background=0.5)
+
+Create a test image of given dimensions with optional background color.
+Default is gray (0.5) for better visibility of both white and black scale bars.
+"""
+function create_test_image(height, width; background=0.5)
+    return RGB.(fill(background, height, width))
+end
+
+"""
+    create_gradient_image(height, width)
+
+Create a test image with a gradient pattern for better visibility of scale bars.
+"""
+function create_gradient_image(height, width)
+    img = zeros(RGB{Float64}, height, width)
+    for i in 1:height
+        for j in 1:width
+            # Create a medium-gray gradient for better visibility of both white and black scale bars
+            img[i, j] = RGB(0.5 - i/height/4, 0.5 - j/width/4, 0.6)
+        end
+    end
+    return img
+end
+
+"""
     get_bar_coordinates(image::Matrix{Int})
 
 Get the coordinates of the bar in the image.

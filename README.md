@@ -29,8 +29,8 @@ Pkg.add("ScaleBar")
 ```julia
 using Images, ScaleBar
 
-# Create a test image
-img = RGB.(ones(512, 512))
+# Create a test image with gray background for better visibility
+img = RGB.(fill(0.5, 512, 512))
 
 # Add a scale bar representing 10μm (assuming 0.1μm per pixel)
 scalebar!(img, 0.1, physical_length=10, units="μm")
@@ -44,8 +44,8 @@ img
 ```julia
 using Images, ScaleBar
 
-# Create a test image
-img = RGB.(ones(512, 512))
+# Create a test image with gray background for better visibility
+img = RGB.(fill(0.5, 512, 512))
 
 # Add a 50-pixel scale bar
 img_with_bar = scalebar(img, length=50)
@@ -105,78 +105,3 @@ scalebar(img; position=:br, length=auto, width=auto, padding=10, color=:white)
 - `padding`: Padding from the edge of the image in pixels, default: 10
 - `color`: Color of the scale bar (`:white` or `:black`), default: `:white`
 
-## Positioning
-
-Scale bars can be positioned at any of the four corners of the image using these symbols:
-
-- `:tl` - Top Left
-- `:tr` - Top Right
-- `:bl` - Bottom Left
-- `:br` - Bottom Right (default)
-
-## Advanced Examples
-
-### Different Positions
-
-```julia
-using Images, ScaleBar
-
-# Create a test image
-img = RGB.(ones(512, 512))
-
-# Add scale bars at different positions
-img_br = scalebar(img, position=:br, color=:black)  # Bottom right
-img_bl = scalebar(img, position=:bl, color=:black)  # Bottom left
-img_tr = scalebar(img, position=:tr, color=:black)  # Top right
-img_tl = scalebar(img, position=:tl, color=:black)  # Top left
-```
-
-### Customizing Dimensions
-
-```julia
-using Images, ScaleBar
-
-# Create a test image
-img = RGB.(ones(512, 512))
-
-# Add a custom-sized scale bar
-scalebar!(img, 
-    length=100,    # 100 pixels long
-    width=15,      # 15 pixels tall
-    padding=20,    # 20 pixels from the edge
-    color=:black
-)
-```
-
-### Real Microscopy Example
-
-```julia
-using Images, ScaleBar, FileIO
-
-# Load a microscopy image
-img = load("microscopy_image.tif")
-
-# Add a scale bar (assuming pixel size is 0.05μm)
-pixel_size = 0.05  # μm per pixel
-scalebar!(img, pixel_size, 
-    physical_length=10,  # 10μm scale bar
-    position=:br,        # Bottom right
-    color=:white,        # White color
-    units="μm"           # Units displayed in output
-)
-
-# Save the result
-save("microscopy_with_scalebar.tif", img)
-```
-
-## Auto-sizing
-
-If no length is specified, the scale bar length will be automatically calculated as 10% of the image width, rounded to the nearest 5 pixels. The width will be calculated as 20% of the length, ensuring a visually pleasing aspect ratio.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This package is licensed under the MIT License - see the LICENSE file for details.

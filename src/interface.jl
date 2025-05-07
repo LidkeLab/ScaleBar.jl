@@ -24,8 +24,8 @@ Add a scale bar to an image in-place, using physical units.
 ```julia
 using Images, ScaleBar
 
-# Create a test image
-img = RGB.(ones(512, 512))
+# Create a test image with gray background for better visibility
+img = RGB.(fill(0.5, 512, 512))
 
 # Add a scale bar representing 10μm (assuming 0.1μm per pixel)
 scalebar!(img, 0.1, physical_length=10, units="μm")
@@ -97,8 +97,8 @@ Add a scale bar to an image in-place, specifying dimensions in pixels.
 ```julia
 using Images, ScaleBar
 
-# Create a test image
-img = RGB.(ones(512, 512))
+# Create a test image with gray background for better visibility
+img = RGB.(fill(0.5, 512, 512))
 
 # Add a 50-pixel scale bar
 scalebar!(img, length=50)
@@ -151,8 +151,8 @@ Create a new image with a scale bar, using physical units.
 ```julia
 using Images, ScaleBar
 
-# Create a test image
-img = RGB.(ones(512, 512))
+# Create a test image with gray background for better visibility
+img = RGB.(fill(0.5, 512, 512))
 
 # Add a scale bar representing 10μm (assuming 0.1μm per pixel)
 img_with_scalebar = scalebar(img, 0.1, physical_length=10, units="μm")
@@ -208,8 +208,8 @@ Create a new image with a scale bar, specifying dimensions in pixels.
 ```julia
 using Images, ScaleBar
 
-# Create a test image
-img = RGB.(ones(512, 512))
+# Create a test image with gray background for better visibility
+img = RGB.(fill(0.5, 512, 512))
 
 # Add a 50-pixel scale bar
 img_with_scalebar = scalebar(img, length=50)

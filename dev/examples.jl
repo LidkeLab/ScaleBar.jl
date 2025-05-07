@@ -1,6 +1,5 @@
 using ScaleBar
 using Images
-using FileIO
 
 """
 This script demonstrates the usage of ScaleBar.jl.
@@ -15,7 +14,8 @@ isdir(output_dir) || mkdir(output_dir)
 function create_test_image(height, width)
     img = zeros(RGB{Float64}, height, width)
     for i in 1:height, j in 1:width
-        img[i, j] = RGB(0.8 - i/height/2, 0.8 - j/width/2, 0.9)
+        # Create a medium-gray gradient for better visibility of both white and black scale bars
+        img[i, j] = RGB(0.5 - i/height/4, 0.5 - j/width/4, 0.6)
     end
     return img
 end
@@ -82,16 +82,30 @@ end
 
 # Demonstrate different colors
 function demo_colors()
-    img = fill(RGB(0.5, 0.5, 0.5), 300, 500)
+    # Create scale bars with different colors on appropriate backgrounds
+    # White scale bar on darker background
+    dark_img = fill(RGB(0.3, 0.3, 0.3), 300, 500)
+    scalebar!(dark_img; position=:br, length=100, width=20, color=:white)
+    save("$output_dir/color_white.png", dark_img)
     
-    # Create scale bars with different colors
-    colors = [:white, :black]
+    # Black scale bar on lighter background
+    light_img = fill(RGB(0.7, 0.7, 0.7), 300, 500)
+    scalebar!(light_img; position=:br, length=100, width=20, color=:black)
+    save("$output_dir/color_black.png", light_img)
     
-    for color in colors
-        img_copy = copy(img)
-        scalebar!(img_copy; position=:br, length=100, width=20, color=color)
-        save("$output_dir/color_$(color).png", img_copy)
+    # Create a split image with both colors
+    split_img = zeros(RGB{Float64}, 300, 500)
+    for i in 1:300
+        for j in 1:500
+            split_img[i, j] = j <= 250 ? RGB(0.3, 0.3, 0.3) : RGB(0.7, 0.7, 0.7)
+        end
     end
+    
+    # Add white scale bar on the dark side
+    scalebar!(split_img; position=:bl, length=100, width=20, color=:white)
+    # Add black scale bar on the light side
+    scalebar!(split_img; position=:br, length=100, width=20, color=:black)
+    save("$output_dir/color_comparison.png", split_img)
     
     println("✓ Created color examples")
 end

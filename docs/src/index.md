@@ -1,63 +1,78 @@
-# ScaleBar
+# ScaleBar.jl
 
-```@meta
-CurrentModule = ScaleBar
-```
-
-A Julia package to add scale bars to images, facilitating visualization of scale in microscopy and similar applications.
+The ScaleBar package is a tool for adding scale bars to images, particularly useful for scientific and microscopy applications. It provides a simple, consistent API for adding scale bars with customizable positions, sizes, and colors.
 
 ## Overview
 
-ScaleBar.jl provides a simple but powerful way to add scale bars to your images. The package supports both:
+Scale bars are essential for providing spatial context in scientific images, especially in microscopy where the actual size of objects isn't immediately apparent. ScaleBar.jl makes it easy to add professional-looking scale bars to your images.
 
-1. **Physical scale bars**: When you know the physical size of each pixel (common in microscopy)
-2. **Pixel-based scale bars**: When you just want a scale bar of a specific pixel length
-
-Each method is available in both in-place (modifying the original image) and non-destructive versions (returning a new image with the scale bar).
-
-## Installation
-
-```julia
-using Pkg
-Pkg.add("ScaleBar")
-```
+Key features:
+- Add scale bars with physical units (μm, nm, etc.) based on pixel size
+- Add scale bars with specific pixel dimensions
+- Position scale bars in any corner of the image
+- Customize size, color, and padding
+- Both in-place and non-destructive operations
 
 ## Basic Usage
 
 ### Physical Scale Bars
 
-When you know the physical size of each pixel (e.g., in microscopy applications), use the `scalebar` functions with a pixel size parameter:
+To add a scale bar based on physical units:
 
 ```julia
 using Images, ScaleBar
 
-# Create a test image
-img = RGB.(ones(512, 512))
+# Create a test image with gray background for better visibility
+img = RGB.(fill(0.5, 512, 512))
 
 # Add a scale bar representing 10μm (assuming 0.1μm per pixel)
-# This modifies the image in-place
 scalebar!(img, 0.1, physical_length=10, units="μm")
-
-# Create a new image with a scale bar
-img_with_scalebar = scalebar(img, 0.1, physical_length=10, units="μm")
 ```
 
-### Pixel-based Scale Bars
+### Pixel-Based Scale Bars
 
-When you just want a scale bar of a specific pixel length, use the `scalebar` functions without a pixel size parameter:
+To add a scale bar with pixel dimensions:
 
 ```julia
 using Images, ScaleBar
 
-# Create a test image
-img = RGB.(ones(512, 512))
+# Create a test image with gray background for better visibility
+img = RGB.(fill(0.5, 512, 512))
 
 # Add a 50-pixel scale bar
-# This modifies the image in-place
 scalebar!(img, length=50)
+```
 
-# Create a new image with a scale bar
-img_with_scalebar = scalebar(img, length=50)
+## Different Image Types
+
+ScaleBar.jl works with various image types:
+
+### RGB Images
+
+```julia
+# RGB image with gray background
+img_rgb = RGB.(fill(0.5, 512, 512))
+scalebar!(img_rgb, 0.1, physical_length=10, units="μm")
+```
+
+### Grayscale Images
+
+```julia
+# Grayscale image
+img_gray = Gray.(fill(0.5, 512, 512))
+scalebar!(img_gray, 0.1, physical_length=10, units="μm")
+```
+
+### Float64 Arrays with Values > 1.0
+
+For Float64 arrays with values greater than 1.0, the scale bar is added using the maximum value:
+
+```julia
+# Float64 array with values > 1.0
+img_float = rand(512, 512) * 100.0  # Values between 0 and 100
+scalebar!(img_float, 0.1, physical_length=10, units="μm")
+# Scale bar will be drawn with the maximum value in the array
+# When saving to images, normalize to [0,1] range (e.g., img ./= maximum(img))
 ```
 
 ## Positioning
@@ -78,31 +93,21 @@ scalebar!(img, position=:bl)
 scalebar!(img, position=:br)
 ```
 
-## Customization
+## API Documentation
 
-You can customize various aspects of the scale bar:
+For a comprehensive overview of the API, use the help mode on `api_overview`:
 
 ```julia
-# Customize dimensions for a physical scale bar
-scalebar!(img, 0.1, 
-    physical_length=10,   # Length in physical units
-    width=5,              # Width in pixels
-    padding=20)           # Padding from the edge
-
-# Customize dimensions for a pixel-based scale bar
-scalebar!(img,
-    length=50,            # Length in pixels
-    width=10,             # Width in pixels
-    color=:black)         # Color (default is :white)
+?ScaleBar.api_overview
 ```
 
-## Automatic Size Calculation
+Or access the complete API documentation programmatically:
 
-If no length is specified, the scale bar length will be automatically calculated as 10% of the image width, rounded to the nearest 5 pixels. The width will be calculated as 20% of the length, ensuring a visually pleasing aspect ratio.
+```julia
+docs = ScaleBar.api_overview()
+```
 
 ## API Reference
-
-ScaleBar.jl provides a clean, unified API with two main functions.
 
 ```@docs
 scalebar!
