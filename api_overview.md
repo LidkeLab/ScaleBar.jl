@@ -15,48 +15,69 @@ ScaleBar.jl provides a clean, unified API with two main functions:
 
 ### `scalebar!` - In-place Scale Bar Addition
 
-Adds a scale bar directly to the input image, modifying it.
+Adds a scale bar directly to the input image, modifying it. Length must be explicitly specified.
 
 ```julia
 # With physical units
-scalebar!(img, pixel_size; 
-    position=:br,
-    physical_length=nothing, 
+scalebar!(img, pixel_size, physical_length; 
+    position=:br, 
     width=nothing, 
     padding=10, 
     color=:white, 
-    units="")
+    units="",
+    quiet=false)
 
 # With pixel dimensions
-scalebar!(img; 
+scalebar!(img, length; 
     position=:br, 
-    length=nothing, 
     width=nothing, 
     padding=10, 
-    color=:white)
+    color=:white,
+    quiet=false)
 ```
 
 ### `scalebar` - Non-destructive Scale Bar Addition
 
-Creates and returns a new image with the scale bar added.
+Creates a new image with the scale bar added. Length can be auto-calculated or explicitly specified.
 
 ```julia
 # With physical units
-scalebar(img, pixel_size; 
+# Auto-calculated length
+img_with_bar1 = scalebar(img, pixel_size; 
     position=:br, 
-    physical_length=nothing, 
     width=nothing, 
     padding=10, 
     color=:white, 
-    units="")
+    units="",
+    quiet=false)
 
-# With pixel dimensions
-scalebar(img; 
+# Explicit length
+img_with_bar2 = scalebar(img, pixel_size; 
+    physical_length=10,
     position=:br, 
-    length=nothing, 
     width=nothing, 
     padding=10, 
-    color=:white)
+    color=:white, 
+    units="",
+    quiet=false)
+
+# With pixel dimensions
+# Auto-calculated length
+img_with_bar3 = scalebar(img; 
+    position=:br, 
+    width=nothing, 
+    padding=10, 
+    color=:white,
+    quiet=false)
+
+# Explicit length
+img_with_bar4 = scalebar(img; 
+    length=50,
+    position=:br, 
+    width=nothing, 
+    padding=10, 
+    color=:white,
+    quiet=false)
 ```
 
 ## Parameters
@@ -68,24 +89,33 @@ scalebar(img;
 - `width`: Width of the scale bar in pixels, default: auto-calculated (20% of length, odd number)
 - `padding`: Padding from the edge of the image in pixels, default: 10
 - `color`: Color of the scale bar (`:white` or `:black`), default: `:white`
+- `quiet`: If true, suppresses console output, default: false
 
 ### Physical Units Method Parameters
 
-- `pixel_size`: Size of each pixel in physical units (e.g., 0.1 for 0.1μm per pixel)
-- `physical_length`: Length of the scale bar in physical units, default: auto-calculated
+For `scalebar!` (in-place):
+- `pixel_size`: Size of each pixel in physical units (e.g., 0.1 for 0.1μm per pixel) - required
+- `physical_length`: Length of the scale bar in physical units - required
+- `units`: Units for the physical length (e.g., "nm", "μm"), default: ""
+
+For `scalebar` (non-destructive):
+- `pixel_size`: Size of each pixel in physical units (e.g., 0.1 for 0.1μm per pixel) - required
+- `physical_length`: Length of the scale bar in physical units - optional, auto-calculated if not provided
 - `units`: Units for the physical length (e.g., "nm", "μm"), default: ""
 
 ### Pixel Dimensions Method Parameters
 
-- `length`: Length of the scale bar in pixels, default: auto-calculated (10% of image width)
+For `scalebar!` (in-place):
+- `length`: Length of the scale bar in pixels - required
 
-## Automatic Calculation Logic
+For `scalebar` (non-destructive):
+- `length`: Length of the scale bar in pixels - optional, auto-calculated if not provided
 
-When parameters are not explicitly provided, ScaleBar.jl uses smart defaults:
+## Automatic Width Calculation
 
-- **Bar Length**: 10% of image width, rounded to nearest 5 pixels
+When width is not explicitly provided, ScaleBar.jl uses smart defaults:
+
 - **Bar Width**: 20% of length, ensured to be an odd number for symmetry
-- **Physical Length**: Calculated from specified pixel size when using pixel dimensions
 
 ## Working with Different Image Types
 
@@ -98,11 +128,11 @@ using Images, ScaleBar
 
 # RGB image with scale bar
 img_rgb = RGB.(fill(0.5, 512, 512))
-scalebar!(img_rgb, 0.1, physical_length=10, units="μm")
+scalebar!(img_rgb, 0.1, 10, units="μm")
 
 # Grayscale image with scale bar
 img_gray = Gray.(rand(512, 512))
-scalebar!(img_gray, 0.1, physical_length=10, units="μm")
+scalebar!(img_gray, 0.1, 10, units="μm")
 ```
 
 ### Numeric Arrays
@@ -112,11 +142,11 @@ Works with raw numeric arrays, providing appropriate handling:
 ```julia
 # Float64 array (0.0 to 1.0)
 img_float = rand(512, 512)  # Values between 0 and 1
-scalebar!(img_float; length=50, color=:white)
+scalebar!(img_float, 50, color=:white)
 
 # Float64 array with values > 1.0
 img_large = rand(512, 512) * 100.0  # Values between 0 and 100
-scalebar!(img_large; length=50, color=:white)
+scalebar!(img_large, 50, color=:white)
 # Scale bar will use the maximum value in the array
 ```
 
@@ -130,8 +160,14 @@ using Images, ScaleBar
 # Create a test image
 img = RGB.(fill(0.5, 512, 512))
 
-# Add a scale bar representing 10μm (assuming 0.1μm per pixel)
-scalebar!(img, 0.1, physical_length=10, units="μm")
+# In-place with required length
+scalebar!(img, 0.1, 10; units="μm")
+
+# Non-destructive with auto-calculated length
+img_with_bar1 = scalebar(img, 0.1; units="μm")
+
+# Non-destructive with explicit length
+img_with_bar2 = scalebar(img, 0.1; physical_length=10, units="μm")
 ```
 
 ### Adding a Scale Bar with Pixel Dimensions
@@ -142,8 +178,14 @@ using Images, ScaleBar
 # Create a test image
 img = RGB.(fill(0.5, 512, 512))
 
-# Add a 50-pixel scale bar to a new copy of the image
-img_with_bar = scalebar(img, length=50)
+# In-place with required length
+scalebar!(img, 50)
+
+# Non-destructive with auto-calculated length
+img_with_bar1 = scalebar(img)
+
+# Non-destructive with explicit length
+img_with_bar2 = scalebar(img; length=50)
 ```
 
 ### Customizing Position and Appearance
@@ -154,20 +196,52 @@ using Images, ScaleBar
 # Create a test image
 img = RGB.(fill(0.5, 512, 512))
 
-# Add a black scale bar in the top-left corner
-scalebar!(img, 0.1, 
+# In-place with required length (top-left corner, black)
+scalebar!(img, 0.1, 5; 
     position=:tl,
-    physical_length=5, 
+    width=8,
+    padding=15,
+    color=:black,
+    units="μm")
+
+# Non-destructive with custom appearance
+img_with_bar = scalebar(img, 0.1;
+    physical_length=5,
+    position=:tr,
     width=8,
     padding=15,
     color=:black,
     units="μm")
 ```
 
+## Suppressing Console Output
+
+When processing multiple images, you can suppress the console output:
+
+```julia
+# Process multiple images quietly with in-place modification
+for file in image_files
+    img = load(file)
+    scalebar!(img, 0.1, 10; units="μm", quiet=true)
+    save("with_scalebar_$(file)", img)
+end
+
+# Process multiple images with non-destructive creation
+processed_images = []
+for file in image_files
+    img = load(file)
+    img_with_bar = scalebar(img, 0.1; physical_length=10, units="μm", quiet=true)
+    push!(processed_images, img_with_bar)
+end
+```
+
 ## Notes and Best Practices
 
-1. For numeric arrays with values > 1.0, white scale bars use the maximum value in the array
-2. When saving images with scale bars, normalize numeric arrays to [0,1] range
-3. Choose contrasting colors for better visibility (white on dark backgrounds, black on light)
-4. The in-place version (`scalebar!`) modifies the original image, while `scalebar` creates a copy
-5. Position the scale bar where it doesn't obscure important image features
+1. For `scalebar!` functions, you must always specify the scale bar length explicitly
+2. For `scalebar` functions, you can either let the length be auto-calculated or specify it explicitly
+3. Auto-calculated lengths are designed to be ~10% of the image width and rounded to a "nice" value
+4. For numeric arrays with values > 1.0, white scale bars use the maximum value in the array
+5. When saving images with scale bars, normalize numeric arrays to [0,1] range
+6. Choose contrasting colors for better visibility (white on dark backgrounds, black on light)
+7. The in-place version (`scalebar!`) modifies the original image, while `scalebar` creates a copy
+8. Position the scale bar where it doesn't obscure important image features

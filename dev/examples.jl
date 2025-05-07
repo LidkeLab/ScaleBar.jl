@@ -32,14 +32,14 @@ function demo_positions()
     
     for pos in positions
         img_copy = copy(img)
-        scalebar!(img_copy; position=pos, length=100, width=20, color=:white)
+        scalebar!(img_copy, 100; position=pos, width=20, color=:white)
         save("$output_dir/position_$(pos).png", img_copy)
     end
     
     # Create a combined image with all positions
     img_all = copy(img)
     for pos in positions
-        scalebar!(img_all; position=pos, length=80, width=15, color=:white)
+        scalebar!(img_all, 80; position=pos, width=15, color=:white)
     end
     save("$output_dir/all_positions.png", img_all)
     
@@ -56,7 +56,7 @@ function demo_physical_scale()
     
     for (idx, (px_size, phys_len)) in enumerate(zip(pixel_sizes, physical_lengths))
         img_copy = copy(img)
-        scalebar!(img_copy, px_size, physical_length=phys_len, units="μm", position=:br, color=:white)
+        scalebar!(img_copy, px_size, phys_len; units="μm", position=:br, color=:white)
         save("$output_dir/physical_$(phys_len)um.png", img_copy)
     end
     
@@ -72,8 +72,9 @@ function demo_auto_sizing()
         img = create_test_image(height, width)
         img_copy = copy(img)
         
-        # Add a scale bar with auto-sizing
-        scalebar!(img_copy; color=:white)
+        # Add a scale bar with explicit length
+        # Using ~1/5 of image width as a reasonable default
+        scalebar!(img_copy, width ÷ 5; color=:white)
         save("$output_dir/auto_size_$(height)x$(width).png", img_copy)
     end
     
@@ -85,12 +86,12 @@ function demo_colors()
     # Create scale bars with different colors on appropriate backgrounds
     # White scale bar on darker background
     dark_img = fill(RGB(0.3, 0.3, 0.3), 300, 500)
-    scalebar!(dark_img; position=:br, length=100, width=20, color=:white)
+    scalebar!(dark_img, 100; position=:br, width=20, color=:white)
     save("$output_dir/color_white.png", dark_img)
     
     # Black scale bar on lighter background
     light_img = fill(RGB(0.7, 0.7, 0.7), 300, 500)
-    scalebar!(light_img; position=:br, length=100, width=20, color=:black)
+    scalebar!(light_img, 100; position=:br, width=20, color=:black)
     save("$output_dir/color_black.png", light_img)
     
     # Create a split image with both colors
@@ -102,9 +103,9 @@ function demo_colors()
     end
     
     # Add white scale bar on the dark side
-    scalebar!(split_img; position=:bl, length=100, width=20, color=:white)
+    scalebar!(split_img, 100; position=:bl, width=20, color=:white)
     # Add black scale bar on the light side
-    scalebar!(split_img; position=:br, length=100, width=20, color=:black)
+    scalebar!(split_img, 100; position=:br, width=20, color=:black)
     save("$output_dir/color_comparison.png", split_img)
     
     println("✓ Created color examples")
