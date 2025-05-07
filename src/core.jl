@@ -160,13 +160,15 @@ If the array has values > 1.0, uses the maximum value for white.
 function draw_bar!(img::AbstractArray{<:Real}, coords, color)
     row_start, row_end, col_start, col_end = coords
     
-    # Find the maximum value in the array for scaling
+    # For displaying properly, we need good contrast between scale bar and image
     max_val = maximum(img)
     
     # Convert symbol to numeric value, using max_val for white if values > 1.0
     if color == :white
         if max_val > 1.0
-            value = max_val
+            # Use a value significantly higher than max_val for better visibility
+            # This ensures the scale bar will be visible even when normalized
+            value = max_val * 1.5  # 50% brighter than the brightest pixel
         else
             value = 1.0
         end
