@@ -65,14 +65,14 @@ scalebar!(img_gray, 0.1, physical_length=10, units="μm")
 
 ### Float64 Arrays with Values > 1.0
 
-For Float64 arrays with values greater than 1.0, the scale bar is added with enhanced contrast:
+For Float64 arrays with values greater than 1.0, the scale bar is added using the maximum value:
 
 ```julia
 # Float64 array with values > 1.0
 img_float = rand(512, 512) * 100.0  # Values between 0 and 100
 scalebar!(img_float, 0.1, physical_length=10, units="μm")
-# Scale bar will be drawn with a value 50% higher than the maximum value for visibility
-# This ensures the scale bar will stand out even after normalization
+# Scale bar will be drawn with the maximum value in the array
+# When saving to images, normalize to [0,1] range (e.g., img ./= maximum(img))
 ```
 
 ## API Reference

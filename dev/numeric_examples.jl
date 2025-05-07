@@ -29,14 +29,13 @@ function demo_numeric_arrays()
     # Check values in the scale bar region
     ROI = img_large_copy[270:290, 300:380]  # Region where scale bar should be
     max_val = maximum(img_large)
-    expected_scalebar_value = max_val * 1.5  # Should be 50% higher than max
-    uses_enhanced = isapprox(maximum(ROI), expected_scalebar_value, rtol=0.1)
+    uses_max = isapprox(maximum(ROI), max_val, rtol=0.01)
     
-    # Normalize to 0-1 range for saving, but use a higher divisor to maintain contrast
-    normalized = img_large_copy ./ (maximum(img_large_copy) * 1.2)  # Divide by a bit more to keep good contrast
+    # For visualization: normalize properly to [0,1] range when saving to PNG
+    normalized = img_large_copy ./ maximum(img_large_copy)
     save("$output_dir/numeric_large_values.png", Gray.(normalized))
     
-    println("✓ Large value Float64 array example created (uses enhanced contrast: $uses_enhanced)")
+    println("✓ Large value Float64 array example created (uses max value: $uses_max)")
     
     # 3. Integer array
     img_int = rand(UInt8, 300, 400)
@@ -64,16 +63,16 @@ function demo_colors_on_values()
     
     # 3. Large value range (0-100) with white scale bar
     img3 = fill(30.0, 300, 400)  # Value = 30
+    # Add white scale bar (uses max value = 100.0)
     scalebar!(img3; position=:br, length=80, width=15, color=:white)
-    # Save with normalization that preserves contrast between background and scale bar
-    # Scale bar will be value 100, background is 30
-    save("$output_dir/values_large_white.png", Gray.(img3 ./ 150))  # Use larger divisor to maintain contrast
+    # Normalize to [0,1] range for saving
+    save("$output_dir/values_large_white.png", Gray.(img3 ./ maximum(img3)))
     
     # 4. Large value range (0-100) with black scale bar
     img4 = fill(70.0, 300, 400)  # Value = 70
     scalebar!(img4; position=:br, length=80, width=15, color=:black)
-    # Use same normalization approach for consistency
-    save("$output_dir/values_large_black.png", Gray.(img4 ./ 150))
+    # Normalize to [0,1] range for saving
+    save("$output_dir/values_large_black.png", Gray.(img4 ./ maximum(img4)))
     
     println("All color value examples created successfully!")
 end
