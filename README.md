@@ -36,10 +36,16 @@ img = RGB.(fill(0.5, 512, 512))
 scalebar!(img, 0.1, 10; units="μm")
 
 # Non-destructive with auto-calculated length
-img_with_bar1 = scalebar(img, 0.1; units="μm")
+result = scalebar(img, 0.1; units="μm")
+img_with_bar1 = result.image
+physical_length = result.physical_length  # Get the physical length used
+pixel_length = result.pixel_length        # Get the length in pixels
 
 # Non-destructive with explicit length
-img_with_bar2 = scalebar(img, 0.1; physical_length=10, units="μm")
+result = scalebar(img, 0.1; physical_length=10, units="μm")
+img_with_bar2 = result.image
+# Or use destructuring
+(; image, physical_length, pixel_length, units) = result
 ```
 
 ### Adding a Scale Bar with Pixel Dimensions
@@ -54,10 +60,15 @@ img = RGB.(fill(0.5, 512, 512))
 scalebar!(img, 50)
 
 # Non-destructive with auto-calculated length
-img_with_bar1 = scalebar(img)
+result = scalebar(img)
+img_with_bar1 = result.image
+pixel_length = result.pixel_length  # Get the length in pixels that was used
 
 # Non-destructive with explicit length
-img_with_bar2 = scalebar(img; length=50)
+result = scalebar(img; length=50)
+img_with_bar2 = result.image
+# Or use destructuring
+(; image, pixel_length) = result
 ```
 
 ## API Reference
@@ -65,7 +76,7 @@ img_with_bar2 = scalebar(img; length=50)
 ScaleBar.jl provides a clean, unified API with two main functions:
 
 - `scalebar!`: Modifies the image in-place (length required)
-- `scalebar`: Creates and returns a new image with the scale bar (length optional)
+- `scalebar`: Creates a new image with the scale bar and returns a named tuple containing the image and scale bar information (length optional)
 
 Each function has two methods:
 
@@ -81,15 +92,16 @@ scalebar!(img, pixel_size, physical_length;
     units="")
 
 # Non-mutating version (length is optional)
-# Auto-calculated length
+# Auto-calculated length - returns a named tuple with image and scale bar info
 scalebar(img, pixel_size; 
     position=:br, 
     width=nothing, 
     padding=10, 
     color=:white, 
     units="")
+# Returns (image, physical_length, pixel_length, units)
 
-# Explicit length
+# Explicit length - returns a named tuple with image and scale bar info
 scalebar(img, pixel_size; 
     physical_length=10,
     position=:br, 
@@ -97,6 +109,7 @@ scalebar(img, pixel_size;
     padding=10, 
     color=:white, 
     units="")
+# Returns (image, physical_length, pixel_length, units)
 ```
 
 **Parameters**:
@@ -123,20 +136,22 @@ scalebar!(img, length;
     color=:white)
 
 # Non-mutating version (length is optional)
-# Auto-calculated length
+# Auto-calculated length - returns a named tuple with image and scale bar info
 scalebar(img; 
     position=:br, 
     width=nothing, 
     padding=10, 
     color=:white)
+# Returns (image, pixel_length)
 
-# Explicit length
+# Explicit length - returns a named tuple with image and scale bar info
 scalebar(img; 
     length=50,
     position=:br, 
     width=nothing, 
     padding=10, 
     color=:white)
+# Returns (image, pixel_length)
 ```
 
 **Parameters**:
@@ -154,6 +169,12 @@ scalebar(img;
 
 1. For `scalebar!` functions, you must always specify the scale bar length explicitly
 2. For `scalebar` functions, you can either let the length be auto-calculated or specify it explicitly
-3. Auto-calculated lengths are designed to be ~10% of the image width and rounded to a "nice" value
-4. Choose contrasting colors for better visibility (white on dark backgrounds, black on light)
+3. The non-mutating `scalebar` function returns a named tuple with:
+   - `image`: The new image with the scale bar added
+   - `physical_length`: The physical length of the scale bar (for physical units version)
+   - `pixel_length`: The length of the scale bar in pixels
+   - `units`: The units of the physical length (for physical units version)
+4. You can use destructuring to extract the fields you need: `(; image, physical_length) = scalebar(...)`
+5. Auto-calculated lengths are designed to be ~10% of the image width and rounded to a "nice" value
+6. Choose contrasting colors for better visibility (white on dark backgrounds, black on light)
 
