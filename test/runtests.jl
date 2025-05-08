@@ -13,13 +13,20 @@ include("test_helpers.jl")
     pixel_size = 1.0 # size of a pixel in physical units
     
     # Add scalebar to the image (bottom left position)
-    img_with_bar = scalebar(img, pixel_size; 
+    result = scalebar(img, pixel_size; 
         physical_length=physical_length,
         color=:white, 
         position=:bl, 
         width=width, 
         padding=10
     )
+    
+    # Extract the image from the result
+    img_with_bar = result.image
+    
+    # Verify that the returned physical_length and pixel_length are correct
+    @test result.physical_length == physical_length
+    @test result.pixel_length == physical_length / pixel_size
     
     # Expected bar size in pixels given the physical length and pixel size
     expected_bar_size = physical_length / pixel_size

@@ -1,5 +1,3 @@
-using Images
-
 """
     scalebar!(img, pixel_size, physical_length; kwargs...)
 
@@ -28,7 +26,7 @@ using Images, ScaleBar
 img = RGB.(fill(0.5, 512, 512))
 
 # Add a scale bar representing 10μm (assuming 0.1μm per pixel)
-scalebar!(img, 0.1, 10, position=:br, units="μm")
+scalebar!(img, 0.1, 10; position=:br, units="μm")
 ```
 """
 function scalebar!(
@@ -102,7 +100,7 @@ using Images, ScaleBar
 img = RGB.(fill(0.5, 512, 512))
 
 # Add a 50-pixel scale bar
-scalebar!(img, 50, position=:br)
+scalebar!(img, 50; position=:br)
 ```
 """
 function scalebar!(
@@ -159,7 +157,11 @@ Create a new image with a scale bar, using physical units.
     units::String : Units for the physical length (e.g., "nm", "μm"), default: ""
 
 # Returns
-    A new image with the scale bar added
+    A named tuple containing:
+    - image: A new image with the scale bar added
+    - physical_length: The physical length of the scale bar
+    - pixel_length: The length of the scale bar in pixels
+    - units: The units of the physical length
 
 # Examples
 ```julia
@@ -169,10 +171,18 @@ using Images, ScaleBar
 img = RGB.(fill(0.5, 512, 512))
 
 # Add a scale bar with auto-calculated length (assuming 0.1μm per pixel)
-img_with_bar1 = scalebar(img, 0.1, position=:br, units="μm")
+result = scalebar(img, 0.1; position=:br, units="μm")
+img_with_bar1 = result.image
+physical_length = result.physical_length  # The physical length that was used
+pixel_length = result.pixel_length        # The length in pixels
+units = result.units                      # The units of the physical length
 
 # Add a scale bar with explicit length of 10μm
-img_with_bar2 = scalebar(img, 0.1, physical_length=10, position=:br, units="μm")
+result = scalebar(img, 0.1; physical_length=10, position=:br, units="μm")
+img_with_bar2 = result.image
+
+# Using destructuring syntax
+(; image, physical_length, pixel_length, units) = scalebar(img, 0.1; position=:br, units="μm")
 ```
 """
 function scalebar(
@@ -188,41 +198,41 @@ function scalebar(
     # Create a copy of the input image
     img_copy = deepcopy(img)
     
+    # Determine the physical length of the scale bar
+    bar_physical_length = physical_length
+    
     if isnothing(physical_length)
         # Calculate default length: 10% of the image width in physical units
         img_width = size(img, 2)
-        phys_length = 0.1 * img_width * pixel_size
+        bar_physical_length = 0.1 * img_width * pixel_size
         
         # Round to a nice value for the scale bar
-        magnitude = 10^floor(log10(phys_length))
-        phys_length = round(phys_length / magnitude) * magnitude
-        
-        # Add the scale bar to the copy using auto-calculated physical length
-        scalebar!(
-            img_copy,
-            pixel_size,
-            phys_length;
-            position=position,
-            width=width,
-            padding=padding,
-            color=color,
-            units=units
-        )
-    else
-        # Add the scale bar to the copy with the provided physical length
-        scalebar!(
-            img_copy,
-            pixel_size,
-            physical_length;
-            position=position,
-            width=width,
-            padding=padding,
-            color=color,
-            units=units
-        )
+        magnitude = 10^floor(log10(bar_physical_length))
+        bar_physical_length = round(bar_physical_length / magnitude) * magnitude
     end
     
-    return img_copy
+    # Calculate length in pixels
+    bar_pixel_length = round(Int, bar_physical_length / pixel_size)
+    
+    # Add the scale bar to the copy
+    scalebar!(
+        img_copy,
+        pixel_size,
+        bar_physical_length;
+        position=position,
+        width=width,
+        padding=padding,
+        color=color,
+        units=units
+    )
+    
+    # Return a named tuple with the image and scale bar info
+    return (
+        image = img_copy, 
+        physical_length = bar_physical_length, 
+        pixel_length = bar_pixel_length, 
+        units = units
+    )
 end
 
 """
@@ -241,7 +251,9 @@ Create a new image with a scale bar, specifying dimensions in pixels.
     color::Symbol : Color of the scale bar (`:white` or `:black`), default: `:white`
 
 # Returns
-    A new image with the scale bar added
+    A named tuple containing:
+    - image: A new image with the scale bar added
+    - pixel_length: The length of the scale bar in pixels
 
 # Examples
 ```julia
@@ -251,10 +263,16 @@ using Images, ScaleBar
 img = RGB.(fill(0.5, 512, 512))
 
 # Add a scale bar with auto-calculated length
-img_with_bar1 = scalebar(img, position=:br)
+result = scalebar(img; position=:br)
+img_with_bar1 = result.image
+pixel_length = result.pixel_length  # The length in pixels that was used
 
 # Add a 50-pixel scale bar with explicit length
-img_with_bar2 = scalebar(img, length=50, position=:br)
+result = scalebar(img; length=50, position=:br)
+img_with_bar2 = result.image
+
+# Using destructuring syntax
+(; image, pixel_length) = scalebar(img; position=:br)
 ```
 """
 function scalebar(
@@ -268,33 +286,30 @@ function scalebar(
     # Create a copy of the input image
     img_copy = deepcopy(img)
     
+    # Determine the pixel length of the scale bar
+    bar_pixel_length = length
+    
     if isnothing(length)
         # Calculate default length: 10% of the image width, rounded to nearest 5
         img_width = size(img, 2)
-        length_px = round(Int, 0.1 * img_width)
+        bar_pixel_length = round(Int, 0.1 * img_width)
         # Round to nearest 5
-        length_px = 5 * round(Int, length_px / 5)
-        
-        # Add the scale bar to the copy using auto-calculated length
-        scalebar!(
-            img_copy,
-            length_px;
-            position=position,
-            width=width,
-            padding=padding,
-            color=color
-        )
-    else
-        # Add the scale bar to the copy with the provided length
-        scalebar!(
-            img_copy,
-            length;
-            position=position,
-            width=width,
-            padding=padding,
-            color=color
-        )
+        bar_pixel_length = 5 * round(Int, bar_pixel_length / 5)
     end
     
-    return img_copy
+    # Add the scale bar to the copy
+    scalebar!(
+        img_copy,
+        bar_pixel_length;
+        position=position,
+        width=width,
+        padding=padding,
+        color=color
+    )
+    
+    # Return a named tuple with the image and scale bar info
+    return (
+        image = img_copy, 
+        pixel_length = bar_pixel_length
+    )
 end

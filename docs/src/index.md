@@ -26,7 +26,7 @@ using Images, ScaleBar
 img = RGB.(fill(0.5, 512, 512))
 
 # Add a scale bar representing 10μm (assuming 0.1μm per pixel)
-scalebar!(img, 0.1, physical_length=10, units="μm")
+scalebar!(img, 0.1, 10; units="μm")
 ```
 
 ### Pixel-Based Scale Bars
@@ -40,7 +40,7 @@ using Images, ScaleBar
 img = RGB.(fill(0.5, 512, 512))
 
 # Add a 50-pixel scale bar
-scalebar!(img, length=50)
+scalebar!(img, 50)
 ```
 
 ## Different Image Types
@@ -52,7 +52,7 @@ ScaleBar.jl works with various image types:
 ```julia
 # RGB image with gray background
 img_rgb = RGB.(fill(0.5, 512, 512))
-scalebar!(img_rgb, 0.1, physical_length=10, units="μm")
+scalebar!(img_rgb, 0.1, 10; units="μm")
 ```
 
 ### Grayscale Images
@@ -60,7 +60,7 @@ scalebar!(img_rgb, 0.1, physical_length=10, units="μm")
 ```julia
 # Grayscale image
 img_gray = Gray.(fill(0.5, 512, 512))
-scalebar!(img_gray, 0.1, physical_length=10, units="μm")
+scalebar!(img_gray, 0.1, 10; units="μm")
 ```
 
 ### Float64 Arrays with Values > 1.0
@@ -70,7 +70,7 @@ For Float64 arrays with values greater than 1.0, the scale bar is added using th
 ```julia
 # Float64 array with values > 1.0
 img_float = rand(512, 512) * 100.0  # Values between 0 and 100
-scalebar!(img_float, 0.1, physical_length=10, units="μm")
+scalebar!(img_float, 0.1, 10; units="μm")
 # Scale bar will be drawn with the maximum value in the array
 # When saving to images, normalize to [0,1] range (e.g., img ./= maximum(img))
 ```
@@ -81,16 +81,37 @@ You can position the scale bar at any of the four corners of the image using Cai
 
 ```julia
 # Top left
-scalebar!(img, position=:tl)
+scalebar!(img, 50; position=:tl)
 
 # Top right
-scalebar!(img, position=:tr)
+scalebar!(img, 50; position=:tr)
 
 # Bottom left
-scalebar!(img, position=:bl)
+scalebar!(img, 50; position=:bl)
 
 # Bottom right (default)
-scalebar!(img, position=:br)
+scalebar!(img, 50; position=:br)
+```
+
+## Non-destructive Scale Bar Addition
+
+The non-mutating `scalebar` function returns more than just the image - it provides a named tuple with information about the scale bar:
+
+```julia
+# With physical units
+result = scalebar(img, 0.1; units="μm")
+img_with_bar = result.image                 # The new image with a scale bar
+physical_length = result.physical_length    # The physical length of the scale bar
+pixel_length = result.pixel_length          # The length in pixels
+units = result.units                        # The units used
+
+# With pixel dimensions
+result = scalebar(img; length=50)
+img_with_bar = result.image                 # The new image with a scale bar
+pixel_length = result.pixel_length          # The length of the scale bar in pixels
+
+# You can also use destructuring syntax
+(; image, physical_length, pixel_length, units) = scalebar(img, 0.1, units="μm")
 ```
 
 ## API Documentation
