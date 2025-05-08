@@ -16,6 +16,7 @@ makedocs(;
         "Home" => "index.md",
         "Examples" => "examples.md",
     ],
+    warnonly=[:missing_docs],
 )
 
 deploydocs(;

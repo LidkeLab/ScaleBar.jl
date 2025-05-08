@@ -1,5 +1,3 @@
-using Images
-
 """
     scalebar!(img, pixel_size, physical_length; kwargs...)
 
