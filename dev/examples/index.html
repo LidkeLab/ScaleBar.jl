@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Examples · ScaleBar.jl</title><meta name="title" content="Examples · ScaleBar.jl"/><meta property="og:title" content="Examples · ScaleBar.jl"/><meta property="twitter:title" content="Examples · ScaleBar.jl"/><meta name="description" content="Documentation for ScaleBar.jl."/><meta property="og:description" content="Documentation for ScaleBar.jl."/><meta property="twitter:description" content="Documentation for ScaleBar.jl."/><meta property="og:url" content="https://LidkeLab.github.io/ScaleBar.jl/examples/"/><meta property="twitter:url" content="https://LidkeLab.github.io/ScaleBar.jl/examples/"/><link rel="canonical" href="https://LidkeLab.github.io/ScaleBar.jl/examples/"/><script data-outdated-warner src="../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL=".."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../assets/documenter.js"></script><script src="../search_index.js"></script><script src="../siteinfo.js"></script><script src="../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../">ScaleBar.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../">Home</a></li><li class="is-active"><a class="tocitem" href>Examples</a><ul class="internal"><li><a class="tocitem" href="#Basic-Examples"><span>Basic Examples</span></a></li><li><a class="tocitem" href="#Positioning-Examples"><span>Positioning Examples</span></a></li><li><a class="tocitem" href="#Customization-Examples"><span>Customization Examples</span></a></li><li><a class="tocitem" href="#Real-world-Examples"><span>Real-world Examples</span></a></li><li><a class="tocitem" href="#Return-Value-Examples"><span>Return Value Examples</span></a></li><li><a class="tocitem" href="#Advanced-Usage"><span>Advanced Usage</span></a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Examples</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Examples</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/LidkeLab/ScaleBar.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/LidkeLab/ScaleBar.jl/blob/main/docs/src/examples.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="Examples"><a class="docs-heading-anchor" href="#Examples">Examples</a><a id="Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Examples" title="Permalink"></a></h1><h2 id="Basic-Examples"><a class="docs-heading-anchor" href="#Basic-Examples">Basic Examples</a><a id="Basic-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Examples" title="Permalink"></a></h2><p>Here are some examples of how to use ScaleBar.jl in common scenarios.</p><h3 id="Physical-Scale-Bars"><a class="docs-heading-anchor" href="#Physical-Scale-Bars">Physical Scale Bars</a><a id="Physical-Scale-Bars-1"></a><a class="docs-heading-anchor-permalink" href="#Physical-Scale-Bars" title="Permalink"></a></h3><p>When working with microscopy images where you know the physical size of each pixel:</p><pre><code class="language-julia hljs">using Images, ScaleBar
+
+# Create a test image (or load your own)
+img = RGB.(ones(512, 512))
+
+# Add a scale bar representing 10μm (assuming 0.1μm per pixel)
+scalebar!(img, 0.1, 10; units=&quot;μm&quot;)</code></pre><h3 id="Pixel-based-Scale-Bars"><a class="docs-heading-anchor" href="#Pixel-based-Scale-Bars">Pixel-based Scale Bars</a><a id="Pixel-based-Scale-Bars-1"></a><a class="docs-heading-anchor-permalink" href="#Pixel-based-Scale-Bars" title="Permalink"></a></h3><p>When you just need a scale bar of a specific pixel length:</p><pre><code class="language-julia hljs">using Images, ScaleBar
+
+# Create a test image
+img = RGB.(ones(512, 512))
+
+# Add a 50-pixel scale bar
+result = scalebar(img; length=50, color=:black)
+img_with_bar = result.image
+pixel_length = result.pixel_length  # Length of the scale bar in pixels</code></pre><h2 id="Positioning-Examples"><a class="docs-heading-anchor" href="#Positioning-Examples">Positioning Examples</a><a id="Positioning-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Positioning-Examples" title="Permalink"></a></h2><p>Scale bars can be positioned at any of the four corners of the image:</p><pre><code class="language-julia hljs"># Bottom right (default)
+scalebar!(img, 50; position=:br)
+
+# Bottom left
+scalebar!(img, 50; position=:bl)
+
+# Top right
+scalebar!(img, 50; position=:tr)
+
+# Top left
+scalebar!(img, 50; position=:tl)</code></pre><h2 id="Customization-Examples"><a class="docs-heading-anchor" href="#Customization-Examples">Customization Examples</a><a id="Customization-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Customization-Examples" title="Permalink"></a></h2><p>You can customize various aspects of the scale bar:</p><pre><code class="language-julia hljs"># Custom dimensions
+scalebar!(img, 100;    # 100 pixels long
+    width=10,      # 10 pixels tall
+    padding=20     # 20 pixels from the edge
+)
+
+# Custom color
+scalebar!(img, 50; color=:black)  # Black scale bar (default is white)</code></pre><h2 id="Real-world-Examples"><a class="docs-heading-anchor" href="#Real-world-Examples">Real-world Examples</a><a id="Real-world-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Real-world-Examples" title="Permalink"></a></h2><h3 id="Microscopy-Image-Example"><a class="docs-heading-anchor" href="#Microscopy-Image-Example">Microscopy Image Example</a><a id="Microscopy-Image-Example-1"></a><a class="docs-heading-anchor-permalink" href="#Microscopy-Image-Example" title="Permalink"></a></h3><p>Here&#39;s a common workflow for microscopy images:</p><pre><code class="language-julia hljs">using Images, ScaleBar, FileIO
+
+# Load a microscopy image
+img = load(&quot;microscopy_image.tif&quot;)
+
+# Add a scale bar (assuming pixel size is 0.05μm)
+pixel_size = 0.05  # μm per pixel
+scalebar!(img, pixel_size, 10;  # 10μm scale bar
+    position=:br,        # Bottom right
+    color=:white,        # White color
+    units=&quot;μm&quot;           # Units displayed in output
+)
+
+# Save the result
+save(&quot;microscopy_with_scalebar.tif&quot;, img)</code></pre><h3 id="Processing-Multiple-Images"><a class="docs-heading-anchor" href="#Processing-Multiple-Images">Processing Multiple Images</a><a id="Processing-Multiple-Images-1"></a><a class="docs-heading-anchor-permalink" href="#Processing-Multiple-Images" title="Permalink"></a></h3><p>You can easily process multiple images in a batch:</p><pre><code class="language-julia hljs">using Images, ScaleBar, FileIO
+
+# Process all TIF files in a directory
+image_dir = &quot;path/to/images&quot;
+output_dir = &quot;path/to/output&quot;
+isdir(output_dir) || mkdir(output_dir)
+
+# Pixel size in μm
+pixel_size = 0.1
+
+for file in readdir(image_dir)
+    if endswith(file, &quot;.tif&quot;) || endswith(file, &quot;.tiff&quot;)
+        # Load image
+        img = load(joinpath(image_dir, file))
+        
+        # Add scale bar
+        scalebar!(img, pixel_size, 10;
+            position=:br, 
+            color=:white, 
+            units=&quot;μm&quot;
+        )
+        
+        # Save result
+        save(joinpath(output_dir, file), img)
+    end
+end</code></pre><h2 id="Return-Value-Examples"><a class="docs-heading-anchor" href="#Return-Value-Examples">Return Value Examples</a><a id="Return-Value-Examples-1"></a><a class="docs-heading-anchor-permalink" href="#Return-Value-Examples" title="Permalink"></a></h2><p>The non-mutating <code>scalebar</code> function returns a named tuple with the image and information about the scale bar:</p><pre><code class="language-julia hljs"># Physical units version
+result = scalebar(img, 0.1; physical_length=10, units=&quot;μm&quot;)
+new_img = result.image                  # The new image with a scale bar
+physical_length = result.physical_length # The physical length of the scale bar
+pixel_length = result.pixel_length      # The length in pixels
+units = result.units                    # The units used
+
+# Using destructuring for cleaner code
+(; image, physical_length, pixel_length, units) = scalebar(img, 0.1; physical_length=5, units=&quot;μm&quot;)
+println(&quot;Scale bar is $physical_length $units ($pixel_length pixels)&quot;)
+
+# Pixel version
+result = scalebar(img; length=50)
+new_img = result.image
+pixel_length = result.pixel_length</code></pre><h2 id="Advanced-Usage"><a class="docs-heading-anchor" href="#Advanced-Usage">Advanced Usage</a><a id="Advanced-Usage-1"></a><a class="docs-heading-anchor-permalink" href="#Advanced-Usage" title="Permalink"></a></h2><h3 id="Creating-a-Consistent-Scale-Bar-for-Image-Series"><a class="docs-heading-anchor" href="#Creating-a-Consistent-Scale-Bar-for-Image-Series">Creating a Consistent Scale Bar for Image Series</a><a id="Creating-a-Consistent-Scale-Bar-for-Image-Series-1"></a><a class="docs-heading-anchor-permalink" href="#Creating-a-Consistent-Scale-Bar-for-Image-Series" title="Permalink"></a></h3><p>When working with a series of images that should have consistent scale bars:</p><pre><code class="language-julia hljs">using Images, ScaleBar, FileIO
+
+function add_consistent_scalebar(image_paths, output_dir, pixel_size, physical_length; position=:br, width=nothing, padding=10, color=:white, units=&quot;&quot;)
+    # Create output directory if it doesn&#39;t exist
+    isdir(output_dir) || mkdir(output_dir)
+    
+    # Process each image
+    for path in image_paths
+        # Load image
+        img = load(path)
+        
+        # Add scale bar with consistent settings
+        scalebar!(img, pixel_size, physical_length, position=position, width=width, padding=padding, color=color, units=units)
+        
+        # Save with the same filename
+        filename = basename(path)
+        save(joinpath(output_dir, filename), img)
+    end
+end
+
+# Usage
+image_paths = [&quot;img1.tif&quot;, &quot;img2.tif&quot;, &quot;img3.tif&quot;]
+add_consistent_scalebar(
+    image_paths, 
+    &quot;output&quot;, 
+    0.1,                 # pixel size
+    5,                   # 5μm scale bar
+    position=:br,        # bottom right
+    color=:white,        # white color
+    units=&quot;μm&quot;           # show units
+)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Home</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.10.2 on <span class="colophon-date" title="Thursday 8 May 2025 03:46">Thursday 8 May 2025</span>. Using Julia version 1.11.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
