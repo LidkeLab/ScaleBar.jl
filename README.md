@@ -32,11 +32,14 @@ using Images, ScaleBar
 # Create a test image with gray background for better visibility
 img = RGB.(fill(0.5, 512, 512))
 
-# Add a scale bar representing 10μm (assuming 0.1μm per pixel)
-scalebar!(img, 0.1, physical_length=10, units="μm")
+# In-place with required length
+scalebar!(img, 0.1, 10; units="μm")
 
-# Display the image
-img
+# Non-destructive with auto-calculated length
+img_with_bar1 = scalebar(img, 0.1; units="μm")
+
+# Non-destructive with explicit length
+img_with_bar2 = scalebar(img, 0.1; physical_length=10, units="μm")
 ```
 
 ### Adding a Scale Bar with Pixel Dimensions
@@ -47,39 +50,63 @@ using Images, ScaleBar
 # Create a test image with gray background for better visibility
 img = RGB.(fill(0.5, 512, 512))
 
-# Add a 50-pixel scale bar
-img_with_bar = scalebar(img, length=50)
+# In-place with required length
+scalebar!(img, 50)
 
-# Display the new image
-img_with_bar
+# Non-destructive with auto-calculated length
+img_with_bar1 = scalebar(img)
+
+# Non-destructive with explicit length
+img_with_bar2 = scalebar(img; length=50)
 ```
 
 ## API Reference
 
 ScaleBar.jl provides a clean, unified API with two main functions:
 
-- `scalebar!`: Modifies the image in-place
-- `scalebar`: Creates and returns a new image with the scale bar
+- `scalebar!`: Modifies the image in-place (length required)
+- `scalebar`: Creates and returns a new image with the scale bar (length optional)
 
 Each function has two methods:
 
 ### Working with Physical Units
 
 ```julia
-# In-place version
-scalebar!(img, pixel_size; position=:br, physical_length=auto, width=auto, padding=10, color=:white, units="")
+# In-place version (length is required)
+scalebar!(img, pixel_size, physical_length; 
+    position=:br, 
+    width=nothing, 
+    padding=10, 
+    color=:white, 
+    units="")
 
-# Non-mutating version
-scalebar(img, pixel_size; position=:br, physical_length=auto, width=auto, padding=10, color=:white, units="")
+# Non-mutating version (length is optional)
+# Auto-calculated length
+scalebar(img, pixel_size; 
+    position=:br, 
+    width=nothing, 
+    padding=10, 
+    color=:white, 
+    units="")
+
+# Explicit length
+scalebar(img, pixel_size; 
+    physical_length=10,
+    position=:br, 
+    width=nothing, 
+    padding=10, 
+    color=:white, 
+    units="")
 ```
 
 **Parameters**:
 - `img`: Input image (AbstractArray)
 - `pixel_size`: Size of each pixel in physical units (e.g., 0.1 for 0.1μm per pixel)
+- `physical_length`: Length of the scale bar in physical units (required for in-place version)
 
 **Keyword Arguments**:
 - `position`: Position of the scale bar (`:tl`, `:tr`, `:bl`, `:br`), default: `:br`
-- `physical_length`: Length of the scale bar in physical units, default: auto-calculated
+- `physical_length`: Length of the scale bar in physical units (optional for non-destructive version)
 - `width`: Width of the scale bar in pixels, default: auto-calculated
 - `padding`: Padding from the edge of the image in pixels, default: 10
 - `color`: Color of the scale bar (`:white` or `:black`), default: `:white`
@@ -88,20 +115,45 @@ scalebar(img, pixel_size; position=:br, physical_length=auto, width=auto, paddin
 ### Working with Pixel Dimensions
 
 ```julia
-# In-place version
-scalebar!(img; position=:br, length=auto, width=auto, padding=10, color=:white)
+# In-place version (length is required)
+scalebar!(img, length; 
+    position=:br, 
+    width=nothing, 
+    padding=10, 
+    color=:white)
 
-# Non-mutating version
-scalebar(img; position=:br, length=auto, width=auto, padding=10, color=:white)
+# Non-mutating version (length is optional)
+# Auto-calculated length
+scalebar(img; 
+    position=:br, 
+    width=nothing, 
+    padding=10, 
+    color=:white)
+
+# Explicit length
+scalebar(img; 
+    length=50,
+    position=:br, 
+    width=nothing, 
+    padding=10, 
+    color=:white)
 ```
 
 **Parameters**:
 - `img`: Input image (AbstractArray)
+- `length`: Length of the scale bar in pixels (required for in-place version)
 
 **Keyword Arguments**:
 - `position`: Position of the scale bar (`:tl`, `:tr`, `:bl`, `:br`), default: `:br`
-- `length`: Length of the scale bar in pixels, default: auto-calculated
+- `length`: Length of the scale bar in pixels (optional for non-destructive version)
 - `width`: Width of the scale bar in pixels, default: auto-calculated
 - `padding`: Padding from the edge of the image in pixels, default: 10
 - `color`: Color of the scale bar (`:white` or `:black`), default: `:white`
+
+## Notes and Best Practices
+
+1. For `scalebar!` functions, you must always specify the scale bar length explicitly
+2. For `scalebar` functions, you can either let the length be auto-calculated or specify it explicitly
+3. Auto-calculated lengths are designed to be ~10% of the image width and rounded to a "nice" value
+4. Choose contrasting colors for better visibility (white on dark backgrounds, black on light)
 

@@ -14,9 +14,9 @@ include("test_helpers.jl")
     
     # Add scalebar to the image (bottom left position)
     img_with_bar = scalebar(img, pixel_size; 
+        physical_length=physical_length,
         color=:white, 
         position=:bl, 
-        physical_length=physical_length, 
         width=width, 
         padding=10
     )

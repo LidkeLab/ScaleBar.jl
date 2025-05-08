@@ -5,3 +5,5 @@
 /docs/Manifest.toml
 /docs/build/
 examples/*
+
+.claude/settings.local.json
