@@ -116,11 +116,36 @@ For `scalebar!` (in-place):
 For `scalebar` (non-destructive):
 - `length`: Length of the scale bar in pixels - optional, auto-calculated if not provided
 
-## Automatic Width Calculation
+## Return Values
 
-When width is not explicitly provided, ScaleBar.jl uses smart defaults:
+The non-mutating `scalebar` function returns a named tuple with the following fields:
 
-- **Bar Width**: 20% of length, ensured to be an odd number for symmetry
+For physical units version:
+```julia
+(; image, physical_length, pixel_length, units) = scalebar(img, pixel_size, ...)
+```
+
+- `image`: A new image with the scale bar added
+- `physical_length`: The physical length of the scale bar
+- `pixel_length`: The length of the scale bar in pixels
+- `units`: The units of the physical length
+
+For pixel dimensions version:
+```julia
+(; image, pixel_length) = scalebar(img, ...)
+```
+
+- `image`: A new image with the scale bar added
+- `pixel_length`: The length of the scale bar in pixels
+
+## Automatic Dimension Calculations
+
+When dimensions are not explicitly provided, ScaleBar.jl uses smart defaults:
+
+- **Auto Bar Length**: ~10% of the image width
+  - For physical units: Rounded to a nice value based on magnitude
+  - For pixel units: Rounded to nearest multiple of 5
+- **Auto Bar Width**: 20% of length, ensured to be an odd number for symmetry
 
 ## Working with Different Image Types
 
@@ -155,7 +180,7 @@ scalebar!(img_large, 50; color=:white)
 # Scale bar will use the maximum value in the array
 ```
 
-## Examples
+## Common Usage Examples
 
 ### Adding a Scale Bar with Physical Units
 
@@ -237,6 +262,8 @@ println("Scale bar: $(result.physical_length) $(result.units) ($(result.pixel_le
 Examples of processing multiple images in a batch:
 
 ```julia
+using Images, ScaleBar, FileIO
+
 # Process multiple images with in-place modification
 for file in image_files
     img = load(file)
@@ -258,19 +285,38 @@ for file in image_files
 end
 ```
 
+## Real-World Example: Microscopy Images
+
+```julia
+using Images, ScaleBar, FileIO
+
+# Load a microscopy image
+img = load("microscopy_image.tif")
+
+# Add a scale bar (assuming pixel size is 0.05μm)
+pixel_size = 0.05  # μm per pixel
+result = scalebar(img, pixel_size, 5;  # 5μm scale bar
+    position=:br,        # Bottom right
+    color=:white,        # White color
+    units="μm"           # Units displayed in output
+)
+
+# Save the result
+save("microscopy_with_scalebar.tif", result.image)
+
+# Print information about the scale bar
+println("Added scale bar: $(result.physical_length) $(result.units) ($(result.pixel_length) pixels)")
+```
+
 ## Notes and Best Practices
 
 1. For `scalebar!` functions, you must always specify the scale bar length explicitly
 2. For `scalebar` functions, you can either let the length be auto-calculated or specify it explicitly 
-3. The non-mutating `scalebar` function returns a named tuple with:
-   - `image`: The new image with the scale bar added
-   - `physical_length`: The physical length of the scale bar (for physical units version)
-   - `pixel_length`: The length of the scale bar in pixels
-   - `units`: The units of the physical length (for physical units version)
+3. The non-mutating `scalebar` function returns a named tuple with the image and scale bar information
 4. You can use destructuring to extract the fields you need: `(; image, physical_length) = scalebar(...)`
 5. Auto-calculated lengths are designed to be ~10% of the image width and rounded to a "nice" value
 6. For numeric arrays with values > 1.0, white scale bars use the maximum value in the array
-7. When saving images with scale bars, normalize numeric arrays to [0,1] range
+7. When saving images with scale bars, normalize numeric arrays to [0,1] range if needed
 8. Choose contrasting colors for better visibility (white on dark backgrounds, black on light)
 9. The in-place version (`scalebar!`) modifies the original image, while `scalebar` creates a copy
 10. Position the scale bar where it doesn't obscure important image features

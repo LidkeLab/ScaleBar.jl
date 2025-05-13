@@ -1,6 +1,6 @@
-# Creating an API Overview File for Julia Packages
+# Create an API Overview File for This Julia Package
 
-This guide explains how to create an effective API overview document that serves both human users and AI assistants.
+Please generate an API overview document for this Julia package that will serve both human users and AI assistants. Follow the structure and guidelines below.
 
 ## Step 1: Create an API Overview File
 
