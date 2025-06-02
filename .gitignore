@@ -7,3 +7,6 @@
 examples/*
 
 .claude/settings.local.json
+.vscode/*
+dev/output/*
+.vscode/
