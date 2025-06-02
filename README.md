@@ -14,6 +14,7 @@ A Julia package for adding scale bars to images, particularly useful for scienti
 - **Flexible Positioning**: Place scale bars at any corner using CairoMakie-style position symbols
 - **Smart Defaults**: Automatically calculates sensible scale bar dimensions based on image size
 - **In-place and Non-destructive**: Choose between modifying images or creating new copies
+- **Reusable Configurations**: Use `ScaleBarConfig` for consistent appearance across multiple images
 
 ## Installation
 
@@ -164,6 +165,28 @@ scalebar(img;
 - `width`: Width of the scale bar in pixels, default: auto-calculated
 - `padding`: Padding from the edge of the image in pixels, default: 10
 - `color`: Color of the scale bar (`:white` or `:black`), default: `:white`
+
+### Using ScaleBarConfig
+
+For consistent appearance across multiple images, use the `ScaleBarConfig` type:
+
+```julia
+# Create a configuration
+config = ScaleBarConfig(
+    position=:br,      # Position of the scale bar
+    height=10,         # Height of the scale bar (or nothing for auto)
+    width=nothing,     # Width of the scale bar (nothing for auto)
+    padding=20,        # Padding from edge
+    color=:white       # Color of the scale bar
+)
+
+# Reuse the same configuration for multiple images
+scalebar!(img1, 0.1, 50; config=config, units="μm")
+scalebar!(img2, 0.1, 50; config=config, units="μm")
+
+# You can override config values if needed
+scalebar!(img3, 0.1, 50; config=config, color=:black, units="μm")
+```
 
 ## Notes and Best Practices
 

@@ -1,5 +1,6 @@
 """
     scalebar!(img, pixel_size, physical_length; kwargs...)
+    scalebar!(img, pixel_size, physical_length; config::ScaleBarConfig, kwargs...)
 
 Add a scale bar to an image in-place, using physical units.
 
@@ -9,6 +10,7 @@ Add a scale bar to an image in-place, using physical units.
     physical_length::Real : Length of the scale bar in physical units
 
 # Keyword Arguments
+    config::ScaleBarConfig : Configuration object for appearance (optional)
     position::Symbol : Position of the scale bar (`:tl`, `:tr`, `:bl`, `:br`), default: `:br`
     width::Integer : Width of the scale bar in pixels, default: auto-calculated
     padding::Integer : Padding from the edge of the image in pixels, default: 10
@@ -27,16 +29,21 @@ img = RGB.(fill(0.5, 512, 512))
 
 # Add a scale bar representing 10μm (assuming 0.1μm per pixel)
 scalebar!(img, 0.1, 10; position=:br, units="μm")
+
+# Use a configuration object for consistent appearance across multiple images
+config = ScaleBarConfig(position=:br, color=:white, padding=20)
+scalebar!(img, 0.1, 10; config=config, units="μm")
 ```
 """
 function scalebar!(
     img::AbstractArray,
     pixel_size::Real,
     physical_length::Real;
-    position::Symbol = :br,
-    width::Union{Integer, Nothing} = nothing,
-    padding::Integer = 10,
-    color::Symbol = :white,
+    config::Union{ScaleBarConfig, Nothing} = nothing,
+    position::Symbol = isnothing(config) ? :br : config.position,
+    width::Union{Integer, Nothing} = isnothing(config) ? nothing : config.width,
+    padding::Integer = isnothing(config) ? 10 : config.padding,
+    color::Symbol = isnothing(config) ? :white : config.color,
     units::String = ""
 )
     # Validate inputs
@@ -106,10 +113,11 @@ scalebar!(img, 50; position=:br)
 function scalebar!(
     img::AbstractArray,
     length::Integer;
-    position::Symbol = :br,
-    width::Union{Integer, Nothing} = nothing,
-    padding::Integer = 10,
-    color::Symbol = :white
+    config::Union{ScaleBarConfig, Nothing} = nothing,
+    position::Symbol = isnothing(config) ? :br : config.position,
+    width::Union{Integer, Nothing} = isnothing(config) ? nothing : config.width,
+    padding::Integer = isnothing(config) ? 10 : config.padding,
+    color::Symbol = isnothing(config) ? :white : config.color
 )
     # Validate inputs
     if length <= 0
@@ -189,10 +197,11 @@ function scalebar(
     img::AbstractArray,
     pixel_size::Real;
     physical_length::Union{Real, Nothing} = nothing,
-    position::Symbol = :br,
-    width::Union{Integer, Nothing} = nothing,
-    padding::Integer = 10,
-    color::Symbol = :white,
+    config::Union{ScaleBarConfig, Nothing} = nothing,
+    position::Symbol = isnothing(config) ? :br : config.position,
+    width::Union{Integer, Nothing} = isnothing(config) ? nothing : config.width,
+    padding::Integer = isnothing(config) ? 10 : config.padding,
+    color::Symbol = isnothing(config) ? :white : config.color,
     units::String = ""
 )
     # Create a copy of the input image
@@ -278,10 +287,11 @@ img_with_bar2 = result.image
 function scalebar(
     img::AbstractArray;
     length::Union{Integer, Nothing} = nothing,
-    position::Symbol = :br,
-    width::Union{Integer, Nothing} = nothing,
-    padding::Integer = 10,
-    color::Symbol = :white
+    config::Union{ScaleBarConfig, Nothing} = nothing,
+    position::Symbol = isnothing(config) ? :br : config.position,
+    width::Union{Integer, Nothing} = isnothing(config) ? nothing : config.width,
+    padding::Integer = isnothing(config) ? 10 : config.padding,
+    color::Symbol = isnothing(config) ? :white : config.color
 )
     # Create a copy of the input image
     img_copy = deepcopy(img)
@@ -313,3 +323,4 @@ function scalebar(
         pixel_length = bar_pixel_length
     )
 end
+

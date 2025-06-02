@@ -1,4 +1,51 @@
 """
+    ScaleBarConfig
+
+Configuration struct for scale bar appearance and positioning.
+
+# Fields
+- `position::Symbol`: Position of the scale bar (:br, :bl, :tr, :tl)
+- `height::Union{Nothing,Int}`: Height of the scale bar in pixels (nothing for auto)
+- `width::Union{Nothing,Int}`: Width of the scale bar in pixels (nothing for auto)
+- `padding::Int`: Padding from the edge of the image in pixels
+- `color::Symbol`: Color of the scale bar (:white or :black)
+
+# Example
+```julia
+config = ScaleBarConfig(position=:br, height=10, color=:white)
+# Use the same config for multiple images
+scalebar!(img1, 0.1, 50; config=config)
+scalebar!(img2, 0.1, 50; config=config)
+```
+"""
+struct ScaleBarConfig
+    position::Symbol
+    height::Union{Nothing,Int}
+    width::Union{Nothing,Int}
+    padding::Int
+    color::Symbol
+    
+    function ScaleBarConfig(; position=:br, height=nothing, width=nothing, padding=20, color=:white)
+        if !(position in [:br, :bl, :tr, :tl])
+            throw(ArgumentError("Position must be one of :br, :bl, :tr, :tl"))
+        end
+        if !(color in [:white, :black])
+            throw(ArgumentError("Color must be :white or :black"))
+        end
+        if !isnothing(height) && height <= 0
+            throw(ArgumentError("Height must be positive"))
+        end
+        if !isnothing(width) && width <= 0
+            throw(ArgumentError("Width must be positive"))
+        end
+        if padding < 0
+            throw(ArgumentError("Padding must be non-negative"))
+        end
+        new(position, height, width, padding, color)
+    end
+end
+
+"""
     calculate_bar_dimensions(img, length, width)
 
 Calculate dimensions for the scale bar based on image size.
@@ -112,72 +159,65 @@ function get_bar_coordinates(img, position, length_px, width_px, padding)
 end
 
 """
-    draw_bar!(img, coords, color)
+    draw_bar!(img::AbstractArray{<:Colorant}, coords, color::Symbol)
 
-Draw a scale bar on an image at the specified coordinates.
+Draw a scale bar on a color image at the specified coordinates.
 
 # Arguments
-    img::AbstractArray : Input image
-    coords::Tuple : (row_start, row_end, col_start, col_end)
-    color::Symbol : Color of the scale bar (:white or :black)
+- `img::AbstractArray{<:Colorant}`: Input color image
+- `coords::Tuple`: (row_start, row_end, col_start, col_end)
+- `color::Symbol`: Color of the scale bar (:white or :black)
 
 # Returns
-    Nothing, modifies img in place
+Nothing, modifies img in place
 """
-function draw_bar!(img::AbstractArray{<:Colorant}, coords, color)
+function draw_bar!(img::AbstractArray{<:Colorant}, coords, color::Symbol)
     row_start, row_end, col_start, col_end = coords
     
     # Convert symbol to RGB value
-    if color == :white
-        rgb_value = RGB(1.0, 1.0, 1.0)
-    elseif color == :black
-        rgb_value = RGB(0.0, 0.0, 0.0)
-    else
-        throw(ArgumentError("Unsupported color: $color. Supported colors are :white and :black"))
-    end
+    rgb_value = color == :white ? RGB(1.0, 1.0, 1.0) : RGB(0.0, 0.0, 0.0)
     
     # Draw the scale bar
-    img[row_start:row_end, col_start:col_end] .= rgb_value
+    @inbounds for i in row_start:row_end, j in col_start:col_end
+        img[i, j] = rgb_value
+    end
     
     return nothing
 end
 
 """
-    draw_bar!(img, coords, color)
+    draw_bar!(img::AbstractArray{T}, coords, color::Symbol) where T<:Real
 
 Draw a scale bar on a numeric array at the specified coordinates.
-For numeric arrays (Float64, etc.), uses 1.0 for white and 0.0 for black.
-If the array has values > 1.0, uses the maximum value for white.
+For numeric arrays, uses appropriate values based on the array's data type and range.
 
 # Arguments
-    img::AbstractArray{<:Real} : Input image (numeric array)
-    coords::Tuple : (row_start, row_end, col_start, col_end)
-    color::Symbol : Color of the scale bar (:white or :black)
+- `img::AbstractArray{T}`: Input numeric array
+- `coords::Tuple`: (row_start, row_end, col_start, col_end)
+- `color::Symbol`: Color of the scale bar (:white or :black)
 
 # Returns
-    Nothing, modifies img in place
+Nothing, modifies img in place
 """
-function draw_bar!(img::AbstractArray{<:Real}, coords, color)
+function draw_bar!(img::AbstractArray{T}, coords, color::Symbol) where T<:Real
     row_start, row_end, col_start, col_end = coords
     
-    # Find the maximum value in the array for scaling
-    max_val = maximum(img)
-    
-    # Convert symbol to numeric value, using max_val for white if values > 1.0
+    # Determine the appropriate value for the color
     if color == :white
-        if max_val > 1.0
-            value = max_val
+        # For floating point arrays with values > 1.0, use the maximum value
+        value = if T <: AbstractFloat && maximum(img) > 1.0
+            T(maximum(img))
         else
-            value = 1.0
+            one(T)
         end
-    elseif color == :black
-        value = 0.0
-    else
-        throw(ArgumentError("Unsupported color: $color. Supported colors are :white and :black"))
+    else  # :black
+        value = zero(T)
     end
     
     # Draw the scale bar
-    img[row_start:row_end, col_start:col_end] .= value
+    @inbounds for i in row_start:row_end, j in col_start:col_end
+        img[i, j] = value
+    end
     
     return nothing
 end

@@ -28,8 +28,8 @@ using Images
 include("core.jl")
 include("interface.jl")
 
-# Export the public API functions
-export scalebar, scalebar!
+# Export the public API functions and types
+export scalebar, scalebar!, ScaleBarConfig
 
 # Include the API overview functionality
 include("api.jl")

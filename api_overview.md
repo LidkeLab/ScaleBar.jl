@@ -8,10 +8,29 @@ ScaleBar.jl is a Julia package for adding scale bars to images, particularly use
 - **Physical Units**: Real-world measurements (μm, nm, etc.) that pixels represent
 - **Positioning**: Where the scale bar appears in the image (top-left, bottom-right, etc.)
 - **In-place vs. Non-destructive**: Choose between modifying the original image or creating a new copy
+- **Configuration Reuse**: Use `ScaleBarConfig` for consistent appearance across multiple images
 
 ## Essential Functions
 
-ScaleBar.jl provides a clean, unified API with two main functions:
+ScaleBar.jl provides a clean, unified API with two main functions and a configuration type:
+
+### `ScaleBarConfig` - Reusable Configuration
+
+A struct for storing scale bar appearance settings that can be reused across multiple images.
+
+```julia
+config = ScaleBarConfig(
+    position=:br,      # Position of the scale bar (default: :br)
+    height=nothing,    # Height in pixels (default: nothing for auto)
+    width=nothing,     # Width in pixels (default: nothing for auto)
+    padding=20,        # Padding from edge (default: 20)
+    color=:white       # Color (default: :white)
+)
+
+# Use with any scalebar function
+scalebar!(img, 0.1, 50; config=config, units="μm")
+scalebar(img, 0.1; config=config, units="μm")
+```
 
 ### `scalebar!` - In-place Scale Bar Addition
 
@@ -32,6 +51,10 @@ scalebar!(img, length;
     width=nothing, 
     padding=10, 
     color=:white)
+
+# Using a configuration
+scalebar!(img, pixel_size, physical_length; config=config, units="")
+scalebar!(img, length; config=config)
 ```
 
 ### `scalebar` - Non-destructive Scale Bar Addition
@@ -84,6 +107,10 @@ result4 = scalebar(img;
 img_with_bar4 = result4.image
 # Can also use destructuring syntax
 (; image, pixel_length) = result4
+
+# Using a configuration
+result5 = scalebar(img, pixel_size; config=config, units="μm")
+result6 = scalebar(img; config=config, length=50)
 ```
 
 ## Parameters
