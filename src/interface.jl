@@ -196,8 +196,8 @@ function scalebar(
     units::String = ""
 )
     # Create a copy of the input image
-    img_copy = deepcopy(img)
-    
+    img_copy = copy(img)
+
     # Determine the physical length of the scale bar
     bar_physical_length = physical_length
     
@@ -284,8 +284,8 @@ function scalebar(
     color::Symbol = :white
 )
     # Create a copy of the input image
-    img_copy = deepcopy(img)
-    
+    img_copy = copy(img)
+
     # Determine the pixel length of the scale bar
     bar_pixel_length = length
     

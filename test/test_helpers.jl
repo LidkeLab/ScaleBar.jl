@@ -2,19 +2,7 @@ using Images
 using ScaleBar
 using FileIO
 
-"""
-    save_test_image(img, filename)
-
-Save an image to the test directory for visual inspection.
-"""
-function save_test_image(img, filename)
-    # Create output directory if it doesn't exist
-    output_dir = joinpath(@__DIR__, "output")
-    isdir(output_dir) || mkdir(output_dir)
-    save(joinpath(output_dir, "$(filename).png"), img)
-end
-
-# Functions moved to avoid duplicates
+# Helper functions for testing scale bar placement and properties
 
 """
     verify_scalebar_placement(img, position, length_px, width_px, padding)
