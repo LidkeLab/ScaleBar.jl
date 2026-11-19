@@ -1,4 +1,4 @@
-using Images
+using Colors
 using ScaleBar
 using FileIO
 

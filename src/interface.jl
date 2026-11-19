@@ -20,7 +20,7 @@ Add a scale bar to an image in-place, using physical units.
 
 # Examples
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # Create a test image with gray background for better visibility
 img = RGB.(fill(0.5, 512, 512))
@@ -94,7 +94,7 @@ Add a scale bar to an image in-place, specifying dimensions in pixels.
 
 # Examples
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # Create a test image with gray background for better visibility
 img = RGB.(fill(0.5, 512, 512))
@@ -165,7 +165,7 @@ Create a new image with a scale bar, using physical units.
 
 # Examples
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # Create a test image with gray background for better visibility
 img = RGB.(fill(0.5, 512, 512))
@@ -257,7 +257,7 @@ Create a new image with a scale bar, specifying dimensions in pixels.
 
 # Examples
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # Create a test image with gray background for better visibility
 img = RGB.(fill(0.5, 512, 512))
