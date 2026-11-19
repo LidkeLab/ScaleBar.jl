@@ -1,6 +1,5 @@
 using ScaleBar
 using Test
-using Images
 using Colors
 using Random
 

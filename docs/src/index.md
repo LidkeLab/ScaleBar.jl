@@ -20,7 +20,7 @@ Key features:
 To add a scale bar based on physical units:
 
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # Create a test image with gray background for better visibility
 img = RGB.(fill(0.5, 512, 512))
@@ -34,7 +34,7 @@ scalebar!(img, 0.1, 10; units="μm")
 To add a scale bar with pixel dimensions:
 
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # Create a test image with gray background for better visibility
 img = RGB.(fill(0.5, 512, 512))

@@ -1,6 +1,5 @@
 using ScaleBar
 using Test
-using Images
 using Colors
 
 @testset "scalebar! (mutating functions)" begin

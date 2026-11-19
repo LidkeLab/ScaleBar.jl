@@ -154,7 +154,7 @@ When dimensions are not explicitly provided, ScaleBar.jl uses smart defaults:
 Works directly with standard image formats:
 
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # RGB image with scale bar
 img_rgb = RGB.(fill(0.5, 512, 512))
@@ -185,7 +185,7 @@ scalebar!(img_large, 50; color=:white)
 ### Adding a Scale Bar with Physical Units
 
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # Create a test image
 img = RGB.(fill(0.5, 512, 512))
@@ -209,7 +209,7 @@ img_with_bar2 = result2.image
 ### Adding a Scale Bar with Pixel Dimensions
 
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # Create a test image
 img = RGB.(fill(0.5, 512, 512))
@@ -231,7 +231,7 @@ pixel_length = result2.pixel_length  # Should be 50
 ### Customizing Position and Appearance
 
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # Create a test image
 img = RGB.(fill(0.5, 512, 512))

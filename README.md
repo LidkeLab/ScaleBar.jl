@@ -22,12 +22,16 @@ using Pkg
 Pkg.add("ScaleBar")
 ```
 
+ScaleBar depends only on Colors. The examples below build images with `RGB` and `Gray` from Colors, so add it
+with `Pkg.add("Colors")`. To load and save image files, add FileIO and an image I/O backend (or Images) yourself:
+since 0.1.1, ScaleBar no longer installs Images.
+
 ## Quick Examples
 
 ### Adding a Scale Bar with Physical Units
 
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # Create a test image with gray background for better visibility
 img = RGB.(fill(0.5, 512, 512))
@@ -51,7 +55,7 @@ img_with_bar2 = result.image
 ### Adding a Scale Bar with Pixel Dimensions
 
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # Create a test image with gray background for better visibility
 img = RGB.(fill(0.5, 512, 512))

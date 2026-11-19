@@ -9,7 +9,7 @@ Here are some examples of how to use ScaleBar.jl in common scenarios.
 When working with microscopy images where you know the physical size of each pixel:
 
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # Create a test image (or load your own)
 img = RGB.(ones(512, 512))
@@ -23,7 +23,7 @@ scalebar!(img, 0.1, 10; units="μm")
 When you just need a scale bar of a specific pixel length:
 
 ```julia
-using Images, ScaleBar
+using Colors, ScaleBar
 
 # Create a test image
 img = RGB.(ones(512, 512))

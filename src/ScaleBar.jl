@@ -23,7 +23,6 @@ Or access the complete API documentation programmatically:
 module ScaleBar
 
 using Colors
-using Images
 
 include("core.jl")
 include("interface.jl")
